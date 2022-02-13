@@ -30,7 +30,7 @@ export default defineComponent({
 
 <style scoped>
 #location__section {
-  width: 340px;
+  width: 342px;
   display: flex;
   justify-content: center;
 }

@@ -41,7 +41,7 @@ export default defineComponent({
   margin: 24px 0 0 0;
 }
 #stats_grid__header {
-  width: 80%;
+  width: 271px;
   margin: 0 auto;
 }
 #stats_grid__header__content {
