@@ -1,11 +1,16 @@
-<script setup>
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import "./root.css";
-</script>
-
 <template>
   <main>
-    <p>Lorum</p>
+    <WeatherForecast></WeatherForecast>
   </main>
 </template>
+
+<script>
+import { defineComponent } from "vue";
+import "./root.css";
+import WeatherForecast from "./components/WeatherForecast.vue";
+
+export default defineComponent({
+  name: "App",
+  components: { WeatherForecast },
+});
+</script>

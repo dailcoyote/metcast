@@ -10,4 +10,22 @@ main {
     width: 100%;
     min-height: 872px;
     position: absolute;
+    display: flex;
+    justify-content: center;
+}
+
+.box {
+    display: flex;
+}
+
+.row {
+    flex-direction: row;
+}
+
+.col {
+    flex-direction: column;
+}
+
+.pointer {
+    cursor: pointer;
 }
