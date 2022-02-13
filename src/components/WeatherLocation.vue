@@ -1,10 +1,10 @@
 <template>
   <div class="box">
-    <div id="location__section" class="row">
+    <div id="location_block" class="row">
         <img :src="icons.location" width="20" height="20" class="pointer" />
         <span>Los Angeles</span>
     </div>
-    <div id="settings__section">
+    <div id="settings__block">
         <img :src="icons.settings" width="24" height="24" class="pointer" />
     </div>
   </div>
@@ -29,19 +29,19 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#location__section {
+#location_block {
   width: 328px;
   display: flex;
   justify-content: center;
 }
-#settings__section {
+#settings__block {
   width: 24px;
 }
 
-#location__section > img {
+#location_block > img {
     margin-right: 2px;
 }
-#location__section > span {
+#location_block > span {
   font-weight: bold;
   font-size: 18px;
   line-height: 21px;

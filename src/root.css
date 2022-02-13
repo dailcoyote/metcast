@@ -29,3 +29,23 @@ main {
 .pointer {
     cursor: pointer;
 }
+
+.w25 {
+    width: 25%;
+}
+
+.w30 {
+    width: 30%;
+}
+
+.w40 {
+    width: 40%;
+}
+
+.w45 {
+    width: 45%;
+}
+
+.ml-8 {
+    margin-left: 32px;
+}
