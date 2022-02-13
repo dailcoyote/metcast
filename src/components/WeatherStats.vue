@@ -11,7 +11,6 @@
           :src="icons.sun"
           width="96"
           height="96"
-          class="pointer"
         />
       </div>
       <h4 id="stats_grid_header__status">Very Sunny</h4>
@@ -60,7 +59,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 #stats_grid {
   margin: 24px 0 0 0;
 }
@@ -110,6 +109,7 @@ export default defineComponent({
 #stats_grid__indicators {
   margin-top: 18px;
   width: 344px;
+  padding: 0 12px;
 }
 
 .indicator__label {
