@@ -8,7 +8,7 @@
         <span id="stats_grid__header__content_temperature"> +28°C </span>
         <img
           id="stats_grid__header__content_precipitation"
-          :src="icons.sun"
+          :src="assets.weather.sun"
           width="96"
           height="96"
         />
@@ -37,7 +37,6 @@
 
 <script>
 import { defineComponent } from "vue";
-import sun from "../assets/sun.png";
 import compass from "../assets/compass.png";
 import hygrometer from "../assets/hygrometer.png";
 import pressureGauge from "../assets/pressure_gauge.png";
@@ -48,7 +47,6 @@ export default defineComponent({
   data() {
     return {
       icons: {
-        sun,
         compass,
         hygrometer,
         pressureGauge,
@@ -63,14 +61,17 @@ export default defineComponent({
 #stats_grid {
   margin: 24px 0 0 0;
 }
+
 #stats_grid__header {
   width: 271px;
   margin: 0 auto;
 }
+
 #stats_grid__header__content, #stats_grid__indicators__content {
   display: flex;
   justify-content: center;
 }
+
 #stats_grid__header__datetime {
   font-weight: normal;
   font-size: 14px;

@@ -46,6 +46,14 @@ main {
     width: 45%;
 }
 
+.ml-5 {
+    margin-left: 20px;
+}
+
 .ml-8 {
     margin-left: 32px;
+}
+
+.mt-3 {
+    margin-top: 12px;
 }

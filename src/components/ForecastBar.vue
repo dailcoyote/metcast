@@ -1,7 +1,8 @@
 <template>
   <div class="forecast_bar box col">
-    <span class="time">{{ timeStr }}</span>
-    <span class="temperature">{{ temperature }}</span>
+    <span class="time">{{ time }}</span>
+    <img class="mt-3 vector" :src="asset" width="32" height="32" />
+    <span class="mt-3 temperature">{{ temperature }}</span>
   </div>
 </template>
 
@@ -11,8 +12,8 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "ForecastBar",
   props: {
-    timeStr: String,
-    // asset: String,
+    time: String,
+    asset: String,
     temperature: String,
   },
 });
@@ -20,7 +21,7 @@ export default defineComponent({
 
 <style>
 .forecast_bar {
-  max-width: 55px;
+  width: 55px;
 }
 
 .forecast_bar > .time {
@@ -30,6 +31,12 @@ export default defineComponent({
   text-align: center;
 
   color: #bcccf4;
+}
+
+.forecast_bar > .vector {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .forecast_bar > .temperature {
