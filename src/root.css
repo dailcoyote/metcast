@@ -22,12 +22,32 @@ main {
     flex-direction: row;
 }
 
+.row-reverse {
+    flex-direction: row-reverse;
+}
+
 .col {
     flex-direction: column;
 }
 
 .pointer {
     cursor: pointer;
+}
+
+.center {
+    align-items: center;
+}
+
+.gray--color {
+    color: rgba(0, 0, 0, 0.28);
+}
+
+.black--color {
+    color: #000000;
+}
+
+.w20 {
+    width: 20%;
 }
 
 .w25 {
@@ -46,12 +66,20 @@ main {
     width: 45%;
 }
 
+.w50 {
+    width: 50%;
+}
+
 .ml-5 {
     margin-left: 20px;
 }
 
 .ml-8 {
     margin-left: 32px;
+}
+
+.mt-2hf {
+    margin-top: 10px;
 }
 
 .mt-3 {

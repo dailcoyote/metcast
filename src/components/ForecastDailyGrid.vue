@@ -1,14 +1,15 @@
 <template>
-  <div id="forecast_daily__grid"></div>
-  <div class="box row">
-    <ForecastBar
-      v-for="(item, i) in dailyForecast"
-      :key="i"
-      :class="i > 0 && 'ml-5'"
-      :time="item.time"
-      :temperature="item.temperature"
-      :asset="item.asset"
-    ></ForecastBar>
+  <div id="forecast_daily__grid">
+    <div class="box row">
+      <ForecastBar
+        v-for="(item, i) in dailyForecast"
+        :key="i"
+        :class="i > 0 && 'ml-5'"
+        :time="item.time"
+        :temperature="item.temperature"
+        :asset="item.asset"
+      ></ForecastBar>
+    </div>
   </div>
 </template>
 
@@ -23,15 +24,12 @@ export default defineComponent({
   },
   props: {
     dailyForecast: Array,
-  },
-  created() {
-    //   console.log(this.assets.weather.cloud)
-  },
+  }
 });
 </script>
 
 <style scoped>
 #forecast_daily__grid {
-    width: 330px;
+  width: 330px;
 }
 </style>
