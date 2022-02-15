@@ -23,9 +23,10 @@ export default defineComponent({
   created() {
     CityRepository.createABCIndex();
     console.log(CityRepository.abcIndex);
+    console.log(import.meta.env.VITE_DEFAULT_CURRENT_LOCATION);
 
     console.log('Searching...', new Date())
-    let resultSet = CityRepository.getSuggestions('Atlanta');
+    let resultSet = CityRepository.getSuggestions(import.meta.env.VITE_DEFAULT_CURRENT_LOCATION);
     console.log('Finish...', new Date(), resultSet);
   },
 });

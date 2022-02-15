@@ -45,4 +45,10 @@ app.mixin({
     }
 })
 
-app.mount('#app')
+app.mount('#app');
+
+window.process = {
+    env: {
+        NODE_ENV: 'development'
+    }
+}

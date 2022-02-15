@@ -24,7 +24,7 @@ class Cities {
     get abcIndex() {
         return this._abcIndex;
     }
-    getSuggestions(searchTerm) {
+    getSuggestions(searchTerm = "") {
         const branch = this._abcIndex.get(searchTerm.charAt(0)) || [];
         let matches = 0;
         let suggestions = [];
@@ -39,7 +39,7 @@ class Cities {
                 suggestions.push(cursor);
             }
 
-            if(matches > 10) {
+            if (matches > 10) {
                 break;
             }
         }
