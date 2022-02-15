@@ -21,13 +21,17 @@ export default defineComponent({
     WeatherBack,
   },
   created() {
+    console.log("Building ABC index...", new Date());
     CityRepository.createABCIndex();
     console.log(CityRepository.abcIndex);
-    console.log(import.meta.env.VITE_DEFAULT_CURRENT_LOCATION);
+    console.log(import.meta.env.VITE_DEFAULT_LOCATION);
 
-    console.log('Searching...', new Date())
-    let resultSet = CityRepository.getSuggestions(import.meta.env.VITE_DEFAULT_CURRENT_LOCATION);
-    console.log('Finish...', new Date(), resultSet);
+    console.log("Searching...", new Date());
+    let { name, coord } =
+      CityRepository.fetchLocationDetail(
+        import.meta.env.VITE_DEFAULT_LOCATION
+      ) || {};
+    console.log("Finish...", new Date(), name, coord);
   },
 });
 </script>
