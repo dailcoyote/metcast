@@ -19,9 +19,6 @@ class Cities {
             this._abcIndex.set(capital, branch);
         }
     }
-    get abcIndex() {
-        return this._abcIndex;
-    }
     fetchLocationDetail(location) {
         const [city, country] = location.split(',');
         const branch = this._abcIndex.get(location?.charAt(0)) || [];

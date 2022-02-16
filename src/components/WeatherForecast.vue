@@ -8,6 +8,7 @@
 
 <script>
 import { defineComponent } from "vue";
+import WeatherService from "../weather_api/WeatherService";
 import CityRepository from "../repositories/Cities";
 import WeatherLocation from "./WeatherLocation.vue";
 import WeatherStats from "./WeatherStats.vue";
@@ -20,18 +21,38 @@ export default defineComponent({
     WeatherStats,
     WeatherBack,
   },
-  created() {
+  data() {
+    return {
+      loading: false,
+    };
+  },
+  methods: {
+    async updateForecastWeather(coord) {
+      try {
+        const data = await WeatherService.fetchForecastWeatherData(
+          coord.lat,
+          coord.lon
+        );
+        console.log(data);
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        if (this.loading) this.loading = !this.loading;
+      }
+    },
+  },
+  async created() {
     console.log("Building ABC index...", new Date());
+    this.loading = !this.loading;
     CityRepository.createABCIndex();
-    console.log(CityRepository.abcIndex);
-    console.log(import.meta.env.VITE_DEFAULT_LOCATION);
-
-    console.log("Searching...", new Date());
-    let { name, coord } =
+    let { coord } =
       CityRepository.fetchLocationDetail(
         import.meta.env.VITE_DEFAULT_LOCATION
       ) || {};
-    console.log("Finish...", new Date(), name, coord);
+
+    if (coord) {
+      this.updateForecastWeather(coord);
+    }
   },
 });
 </script>
