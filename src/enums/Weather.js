@@ -35,7 +35,6 @@ class WeatherIcons {
 }
 
 class WeatherConditions {
-
     static Thunderstorm = new WeatherConditions({
         defaultAsset: WeatherIcons.StormyWeather
     });
@@ -104,14 +103,30 @@ class WeatherConditions {
     }
 
     findWeatherCondition(id) {
-        if(!Array.isArray(this.materials?.linkedCodes)) {
+        if (!Array.isArray(this.materials?.linkedCodes)) {
             return this.materials.defaultAsset;
         }
         return this.materials.linkedCodes.find((item) => item.id === id)
     }
 }
 
+class TemperatureUnits {
+    static Celsius = {
+        grade: "°C",
+        unit: 'metric'
+    };
+    static Fahrenheit = {
+        grade: "°F",
+        unit: 'imperial'
+    };
+    static Kelvin = {
+        grade: "K",
+        unit: 'default'
+    }
+}
+
 export default {
     WeatherIcons,
-    WeatherConditions
+    WeatherConditions,
+    TemperatureUnits
 };

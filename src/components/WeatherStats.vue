@@ -2,33 +2,35 @@
   <div id="stats_grid">
     <div id="stats_grid__header">
       <div class="row">
-        <h4 id="stats_grid__header__datetime">2: 23 PM Aug 14th, 2022</h4>
+        <h4 id="stats_grid__header__datetime">{{ stats.dateTime }}</h4>
       </div>
       <div id="stats_grid__header__content" class="row">
-        <span id="stats_grid__header__content_temperature"> +28°C </span>
+        <span id="stats_grid__header__content_temperature">
+          {{ stats.temperatureFormat }}
+        </span>
         <img
           id="stats_grid__header__content_precipitation"
-          :src="assets.weather.sun"
+          :src="stats.weatherIcon"
           width="96"
           height="96"
         />
       </div>
-      <h4 id="stats_grid_header__status">Very Sunny</h4>
+      <h4 id="stats_grid_header__status">{{ stats.weatherDescription }}</h4>
     </div>
     <div id="stats_grid__indicators">
       <div id="stats_grid__indicators__content" class="row">
         <div class="box row w45">
           <img :src="icons.wind" width="32" height="32" />
-          <span class="indicator__label">2.1m.e, E</span>
+          <span class="indicator__label">{{ stats.windSpeedTextFormat }}</span>
           <img :src="icons.compass" width="22" height="22" />
         </div>
         <div class="box row w25">
           <img :src="icons.hygrometer" width="32" height="32" />
-          <span class="indicator__label">87%</span>
+          <span class="indicator__label">{{ stats.humidityTextFormat }}</span>
         </div>
-         <div class="box row w30">
+        <div class="box row w30">
           <img :src="icons.pressureGauge" width="32" height="32" />
-          <span class="indicator__label">1012hPa</span>
+          <span class="indicator__label">{{ stats.pressureTextFormat }}</span>
         </div>
       </div>
     </div>
@@ -44,9 +46,17 @@ import wind from "../assets/wind.png";
 
 export default defineComponent({
   name: "WeatherStats",
-  // props: {
-
-  // },
+  props: {
+    stats: Object,
+    // dateTime: String,
+    // tempValue: Number,
+    // tempUnit: String,
+    // weatherIcon: String,
+    // weatherDescription: String,
+    // windSpeed: Number,
+    // pressure: Number,
+    // humidity: Number,
+  },
   data() {
     return {
       icons: {
@@ -56,6 +66,23 @@ export default defineComponent({
         wind,
       },
     };
+  },
+  computed: {
+    temperatureFormat() {
+      let v = this.stats.tempValue > 0 ? "+" : "-";
+      v += this.stats.tempValue;
+      v += this.stats.tempUnit;
+      return v;
+    },
+    windSpeedTextFormat() {
+      return this.stats.windSpeed + "m.e, E";
+    },
+    pressureTextFormat() {
+      return this.stats.pressure + "hPa";
+    },
+    humidityTextFormat() {
+      return this.stats.humidity + "%";
+    },
   },
 });
 </script>
@@ -70,7 +97,8 @@ export default defineComponent({
   margin: 0 auto;
 }
 
-#stats_grid__header__content, #stats_grid__indicators__content {
+#stats_grid__header__content,
+#stats_grid__indicators__content {
   display: flex;
   justify-content: center;
 }

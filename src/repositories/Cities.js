@@ -21,9 +21,11 @@ class Cities {
     }
     fetchLocationDetail(location) {
         const [city, country] = location.split(',');
-        const branch = this._abcIndex.get(location?.charAt(0)) || [];
-        return branch.find((cursor) => cursor.name.toLowerCase().includes(city?.toLowerCase())
-            && cursor.country.toLowerCase().includes(country?.toLowerCase()));
+        return (this._abcIndex.get(location?.charAt(0)) || [])
+            .find(
+                (cursor) => cursor.name.toLowerCase().includes(city?.toLowerCase())
+                    && cursor.country.toLowerCase().includes(country?.toLowerCase())
+            );
     }
     getSuggestions(searchTerm = "") {
         const branch = this._abcIndex.get(searchTerm.charAt(0)) || [];
