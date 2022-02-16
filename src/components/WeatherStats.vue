@@ -47,15 +47,7 @@ import wind from "../assets/wind.png";
 export default defineComponent({
   name: "WeatherStats",
   props: {
-    stats: Object,
-    // dateTime: String,
-    // tempValue: Number,
-    // tempUnit: String,
-    // weatherIcon: String,
-    // weatherDescription: String,
-    // windSpeed: Number,
-    // pressure: Number,
-    // humidity: Number,
+    stats: Object
   },
   data() {
     return {

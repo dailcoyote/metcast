@@ -53,9 +53,7 @@ export default defineComponent({
         const currentWeatherInfo = this.data.current.weather[0];
         const g = WeatherEnums.WeatherConditions[currentWeatherInfo?.main];
         const asset = g.findWeatherAsset(currentWeatherInfo?.id);
-
-        console.log(g)
-
+        
         currentStats.dateTime = this.currentDateTime;
         currentStats.tempValue = this.data.current.temp;
         currentStats.weatherDescription = currentWeatherInfo?.description || "";
