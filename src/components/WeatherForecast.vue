@@ -52,12 +52,14 @@ export default defineComponent({
       if (this.data && this.data?.current) {
         const currentWeatherInfo = this.data.current.weather[0];
         const g = WeatherEnums.WeatherConditions[currentWeatherInfo?.main];
-        const c = g.findWeatherCondition(currentWeatherInfo?.id);
+        const asset = g.findWeatherAsset(currentWeatherInfo?.id);
+
+        console.log(g)
 
         currentStats.dateTime = this.currentDateTime;
         currentStats.tempValue = this.data.current.temp;
         currentStats.weatherDescription = currentWeatherInfo?.description || "";
-        currentStats.weatherIcon = c?.asset;
+        currentStats.weatherIcon = asset;
         currentStats.windSpeed = this.data.current.wind_speed;
         currentStats.pressure = this.data.current.pressure;
         currentStats.humidity = this.data.current.humidity;

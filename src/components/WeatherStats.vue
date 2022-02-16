@@ -6,7 +6,7 @@
       </div>
       <div id="stats_grid__header__content" class="row">
         <span id="stats_grid__header__content_temperature">
-          {{ stats.temperatureFormat }}
+          {{ temperatureFormat }}
         </span>
         <img
           id="stats_grid__header__content_precipitation"
@@ -21,16 +21,16 @@
       <div id="stats_grid__indicators__content" class="row">
         <div class="box row w45">
           <img :src="icons.wind" width="32" height="32" />
-          <span class="indicator__label">{{ stats.windSpeedTextFormat }}</span>
+          <span class="indicator__label">{{ windSpeedTextFormat }}</span>
           <img :src="icons.compass" width="22" height="22" />
         </div>
         <div class="box row w25">
           <img :src="icons.hygrometer" width="32" height="32" />
-          <span class="indicator__label">{{ stats.humidityTextFormat }}</span>
+          <span class="indicator__label">{{ humidityTextFormat }}</span>
         </div>
         <div class="box row w30">
           <img :src="icons.pressureGauge" width="32" height="32" />
-          <span class="indicator__label">{{ stats.pressureTextFormat }}</span>
+          <span class="indicator__label">{{ pressureTextFormat }}</span>
         </div>
       </div>
     </div>

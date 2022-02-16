@@ -102,11 +102,15 @@ class WeatherConditions {
         this.materials = materials;
     }
 
-    findWeatherCondition(id) {
-        if (!Array.isArray(this.materials?.linkedCodes)) {
-            return this.materials.defaultAsset;
+    findWeatherAsset(id) {
+        const cond = Array.isArray(this.materials.linkedCodes) &&
+            this.materials.linkedCodes.find((item) => item.id === id);
+
+        if (!cond) {
+            return this.materials.defaultAsset
         }
-        return this.materials.linkedCodes.find((item) => item.id === id)
+
+        return cond.asset;
     }
 }
 
