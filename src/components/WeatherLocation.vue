@@ -2,7 +2,7 @@
   <div class="box">
     <div id="location_block" class="row">
         <img :src="icons.location" width="20" height="20" class="pointer" />
-        <span>Los Angeles</span>
+        <span>{{location}}</span>
     </div>
     <div id="settings__block">
         <img :src="icons.settings" width="24" height="24" class="pointer" />
@@ -17,6 +17,9 @@ import settings from "../assets/settings.png";
 
 export default defineComponent({
   name: "WeatherLocation",
+  props: {
+    location: String
+  },
   data() {
       return {
           icons: {

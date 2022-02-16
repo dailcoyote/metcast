@@ -44,6 +44,9 @@ import wind from "../assets/wind.png";
 
 export default defineComponent({
   name: "WeatherStats",
+  // props: {
+
+  // },
   data() {
     return {
       icons: {

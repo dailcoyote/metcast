@@ -1,6 +1,6 @@
 <template>
-  <section id="weather__section">
-    <WeatherLocation></WeatherLocation>
+  <section id="weather__section" v-if="!loading">
+    <WeatherLocation :location="currentLocation"></WeatherLocation>
     <WeatherStats></WeatherStats>
     <WeatherBack></WeatherBack>
   </section>
@@ -24,16 +24,17 @@ export default defineComponent({
   data() {
     return {
       loading: false,
+      data: undefined,
+      currentLocation: undefined,
     };
   },
   methods: {
     async updateForecastWeather(coord) {
       try {
-        const data = await WeatherService.fetchForecastWeatherData(
+        this.data = await WeatherService.fetchForecastWeatherData(
           coord.lat,
           coord.lon
         );
-        console.log(data);
       } catch (error) {
         alert(error.message);
       } finally {
@@ -45,10 +46,12 @@ export default defineComponent({
     console.log("Building ABC index...", new Date());
     this.loading = !this.loading;
     CityRepository.createABCIndex();
+
+    if (!this.currentLocation) {
+      this.currentLocation = import.meta.env.VITE_DEFAULT_LOCATION;
+    }
     let { coord } =
-      CityRepository.fetchLocationDetail(
-        import.meta.env.VITE_DEFAULT_LOCATION
-      ) || {};
+      CityRepository.fetchLocationDetail(this.currentLocation) || {};
 
     if (coord) {
       this.updateForecastWeather(coord);
