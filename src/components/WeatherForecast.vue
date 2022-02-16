@@ -31,17 +31,25 @@ export default defineComponent({
   },
   computed: {
     currentDateTime() {
+      let date = new Date(),
+        options = {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        };
       if (this.data && this.data?.current) {
-        let d = new Date(this.data.current.dt * 1000);
-        return d.toGMTString();
+        date = new Date(this.data.current.dt * 1000);
       }
-      return new Date().toGMTString();
+      return new Intl.DateTimeFormat("en-US", options).format(date);
     },
     currentWeatherStats() {
       let currentStats = {
         dateTime: new Date().toGMTString(),
         tempValue: 0,
-        tempUnit: this.temperatureUnit,
+        tempUnit: this.temperatureUnit.grade,
         weatherIcon: undefined,
         weatherDescription: "",
         windSpeed: 0,
@@ -53,7 +61,7 @@ export default defineComponent({
         const currentWeatherInfo = this.data.current.weather[0];
         const g = WeatherEnums.WeatherConditions[currentWeatherInfo?.main];
         const asset = g.findWeatherAsset(currentWeatherInfo?.id);
-        
+
         currentStats.dateTime = this.currentDateTime;
         currentStats.tempValue = this.data.current.temp;
         currentStats.weatherDescription = currentWeatherInfo?.description || "";
@@ -66,7 +74,11 @@ export default defineComponent({
       return currentStats;
     },
     temperatureUnit() {
-      return WeatherEnums.TemperatureUnits.Celsius.grade;
+      return (
+        WeatherEnums.TemperatureUnits[
+          import.meta.env.VITE_DEFAULT_TEMPERATURE_UNIT
+        ] || WeatherEnums.TemperatureUnits.Celsius
+      );
     },
   },
   methods: {
@@ -74,9 +86,10 @@ export default defineComponent({
       try {
         this.data = await WeatherService.fetchForecastWeatherData(
           coord.lat,
-          coord.lon
+          coord.lon,
+          this.temperatureUnit.unit
         );
-        console.log('Forecast updated')
+        console.log("Forecast updated");
       } catch (error) {
         alert(error.message);
       } finally {
@@ -94,8 +107,6 @@ export default defineComponent({
     }
     let { coord } =
       CityRepository.fetchLocationDetail(this.currentLocation) || {};
-
-    console.log(coord, this.currentLocation)  
 
     if (coord) {
       this.updateForecastWeather(coord);

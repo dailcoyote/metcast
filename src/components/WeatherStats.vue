@@ -15,7 +15,7 @@
           height="96"
         />
       </div>
-      <h4 id="stats_grid_header__status">{{ stats.weatherDescription }}</h4>
+      <h4 id="stats_grid_header__status">{{ descriptionFormat }}</h4>
     </div>
     <div id="stats_grid__indicators">
       <div id="stats_grid__indicators__content" class="row">
@@ -60,6 +60,13 @@ export default defineComponent({
     };
   },
   computed: {
+    descriptionFormat() {
+      let words = this.stats.weatherDescription.split(' ');
+      words.forEach(function(w,i) {
+        words[i] = w.charAt(0).toUpperCase() + w.slice(1);
+      });
+      return words.join(' ');
+    },
     temperatureFormat() {
       let v = this.stats.tempValue > 0 ? "+" : "-";
       v += this.stats.tempValue;

@@ -1,9 +1,10 @@
 
 class WeatherService {
-    async fetchForecastWeatherData(lat, lon) {
+    async fetchForecastWeatherData(lat, lon, units) {
         const params = {
             lat,
             lon,
+            units,
             appid: import.meta.env.VITE_APP_OPEN_WEATHER_APPID
         };
         const options = {
