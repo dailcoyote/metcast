@@ -48,13 +48,13 @@ export default defineComponent({
     currentWeatherStats() {
       let currentStats = {
         dateTime: new Date().toGMTString(),
-        tempValue: 0,
+        tempValue: 0.0,
         tempUnit: this.temperatureUnit.grade,
         weatherIcon: undefined,
         weatherDescription: "",
-        windSpeed: 0,
-        pressure: 0,
-        humidity: 0,
+        windSpeed: 0.0,
+        pressure: 0.0,
+        humidity: 0.0,
       };
 
       if (this.data && this.data?.current) {
