@@ -7,19 +7,15 @@
       aria-describedby="modalDescription"
     >
       <header class="modal-header" id="modalTitle">
-        <slot name="header"> This is the default tile! </slot>
-        <button
-          type="button"
-          class="btn-close"
-          @click="close"
-          aria-label="Close modal"
-        >
-          x
-        </button>
+        <slot name="header">
+          <!-- This is the default tile!  -->
+        </slot>
       </header>
 
       <section class="modal-body" id="modalDescription">
-        <slot name="body"> This is the default body! </slot>
+        <slot name="body">
+          <!-- This is the default body! -->
+        </slot>
       </section>
     </div>
   </div>
@@ -87,12 +83,5 @@ export default defineComponent({
   font-weight: bold;
   color: #4aae9b;
   background: transparent;
-}
-
-.btn-green {
-  color: white;
-  background: #4aae9b;
-  border: 1px solid #4aae9b;
-  border-radius: 2px;
 }
 </style>
