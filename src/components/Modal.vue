@@ -49,6 +49,7 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 555;
 }
 
 .modal {
@@ -57,15 +58,14 @@ export default defineComponent({
   overflow-x: auto;
   display: flex;
   flex-direction: column;
-}
-
-.modal-header {
-  padding: 15px;
-  display: flex;
+  width: 375px;
+  height: 100vh;
 }
 
 .modal-header {
   position: relative;
+  padding: 21px 15px;
+  display: flex;
   border-bottom: 1px solid #eeeeee;
   color: #4aae9b;
   justify-content: space-between;
