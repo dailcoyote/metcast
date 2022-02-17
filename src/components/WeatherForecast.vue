@@ -1,6 +1,9 @@
 <template>
   <section id="weather__section" v-if="!loading">
-    <WeatherLocation :location="currentLocation"></WeatherLocation>
+    <WeatherLocation
+      :location="currentLocation"
+      :suggestionsFunc="suggestionsFunc"
+    ></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
     <WeatherBack
       :hourlyWeatherStats="hourlyWeatherStats"
@@ -30,6 +33,7 @@ export default defineComponent({
       loading: false,
       data: undefined,
       currentLocation: undefined,
+      suggestionsFunc: CityFinder.getSuggestions.bind(CityFinder),
     };
   },
   computed: {
@@ -64,7 +68,8 @@ export default defineComponent({
         const { weather, temp, wind_speed, pressure, humidity } =
           this.data.current;
         const currentWeatherInfo = weather[0];
-        const g = WeatherComposition.WeatherConditions[currentWeatherInfo?.main];
+        const g =
+          WeatherComposition.WeatherConditions[currentWeatherInfo?.main];
         const asset = g && g.findWeatherAsset(currentWeatherInfo?.id);
 
         currentStats.dateTime = this.currentDateTime;
@@ -107,6 +112,9 @@ export default defineComponent({
         if (this.loading) this.loading = !this.loading;
       }
     },
+    setCurrentLocation(location = import.meta.env.VITE_DEFAULT_LOCATION) {
+      this.currentLocation = location;
+    },
   },
   created() {
     console.log("Building ABC index...", new Date());
@@ -114,10 +122,9 @@ export default defineComponent({
     CityFinder.createABCIndex();
 
     if (!this.currentLocation) {
-      this.currentLocation = import.meta.env.VITE_DEFAULT_LOCATION;
+      this.setCurrentLocation();
     }
-    let { coord } =
-      CityFinder.fetchLocationDetail(this.currentLocation) || {};
+    let { coord } = CityFinder.fetchLocationDetail(this.currentLocation) || {};
 
     if (coord) {
       this.updateForecastWeather(coord);

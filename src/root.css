@@ -46,6 +46,10 @@ main {
     color: #000000;
 }
 
+.bg-gray-light {
+    background: #eceef2;
+}
+
 .w20 {
     width: 20%;
 }

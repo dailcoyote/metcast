@@ -23,8 +23,8 @@
   <Modal v-show="isModalVisible" @close="closeModal">
     <template v-slot:header>
       <form>
-        <input type="text" placeholder=" " />
-        <button type="reset">
+        <input type="text" placeholder=" " v-model="searchTerm" />
+        <button type="reset" @click="clearSearchRef">
           <img :src="icons.grayClose" width="22" height="22" />
         </button>
       </form>
@@ -32,18 +32,20 @@
 
     <template v-slot:body>
       <ul>
-        <li class="pointer">Atlanta, US</li>
-        <li class="pointer">Atlanta, US</li>
-        <li class="pointer">Atlanta, US</li>
-        <li class="pointer">Atlanta, US</li>
-        <li class="pointer">Atlanta, US</li>
+        <li
+          v-for="(location, i) in locationList"
+          :key="location.name + i"
+          class="pointer hover:bg-gray-light"
+        >
+          {{ location.name }}, {{ location.country }}
+        </li>
       </ul>
     </template>
   </Modal>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 
 import Modal from "./Modal.vue";
 import location from "../assets/location.png";
@@ -54,9 +56,17 @@ export default defineComponent({
   name: "WeatherLocation",
   props: {
     location: String,
+    suggestionsFunc: Function,
   },
   components: {
     Modal,
+  },
+  setup() {
+    let searchTerm = ref("");
+
+    return {
+      searchTerm,
+    };
   },
   data() {
     return {
@@ -66,7 +76,20 @@ export default defineComponent({
         grayClose,
       },
       isModalVisible: false,
+      locationList: new Array(),
     };
+  },
+  watch: {
+    searchTerm(newTerms) {
+      this.clearSearchRef();
+
+      if (newTerms && newTerms.length >= 3) {
+        console.log(newTerms);
+        let ret = this.suggestionsFunc(newTerms);
+        console.log(ret);
+        this.locationList = [...ret];
+      }
+    },
   },
   methods: {
     showModal() {
@@ -75,6 +98,9 @@ export default defineComponent({
     closeModal() {
       this.isModalVisible = false;
     },
+    clearSearchRef() {
+      this.locationList = [];
+    }
   },
 });
 </script>
