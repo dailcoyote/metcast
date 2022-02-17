@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import WeatherEnums from "./enums/Weather";
+import WeatherComposition from "./types/WeatherComposition";
 
 const app = createApp(App);
 
@@ -8,7 +8,7 @@ app.mixin({
     data() {
         return {
             assets: {
-                weather: WeatherEnums.WeatherIcons
+                weather: WeatherComposition.WeatherIcons
             },
         }
     }

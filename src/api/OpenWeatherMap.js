@@ -1,5 +1,5 @@
 
-class WeatherService {
+class OpenWeatherMap {
     async fetchForecastWeatherData(lat, lon, units) {
         const params = {
             lat,
@@ -19,4 +19,4 @@ class WeatherService {
     }
 }
 
-export default new WeatherService();
+export default new OpenWeatherMap();

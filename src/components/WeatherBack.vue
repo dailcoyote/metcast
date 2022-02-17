@@ -7,7 +7,7 @@
 
 <script>
 import { defineComponent } from "vue";
-import WeatherEnums from "../enums/Weather";
+import WeatherComposition from "../types/WeatherComposition";
 import ForecastHourlyGrid from "./ForecastHourlyGrid.vue";
 import ForecastDailyGrid from "./ForecastDailyGrid.vue";
 
@@ -86,7 +86,7 @@ export default defineComponent({
       return v;
     },
     defineAsset(type, id) {
-      let g = WeatherEnums.WeatherConditions[type];
+      let g = WeatherComposition.WeatherConditions[type];
       return g && g.findWeatherAsset(id);
     },
   }

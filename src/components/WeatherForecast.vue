@@ -11,9 +11,9 @@
 
 <script>
 import { defineComponent } from "vue";
-import WeatherService from "../weather_api/WeatherService";
-import CityRepository from "../repositories/Cities";
-import WeatherEnums from "../enums/Weather";
+import OpenWeatherMap from "../api/OpenWeatherMap";
+import CityFinder from "../api/CityFinder";
+import WeatherComposition from "../types/WeatherComposition";
 import WeatherLocation from "./WeatherLocation.vue";
 import WeatherStats from "./WeatherStats.vue";
 import WeatherBack from "./WeatherBack.vue";
@@ -64,7 +64,7 @@ export default defineComponent({
         const { weather, temp, wind_speed, pressure, humidity } =
           this.data.current;
         const currentWeatherInfo = weather[0];
-        const g = WeatherEnums.WeatherConditions[currentWeatherInfo?.main];
+        const g = WeatherComposition.WeatherConditions[currentWeatherInfo?.main];
         const asset = g && g.findWeatherAsset(currentWeatherInfo?.id);
 
         currentStats.dateTime = this.currentDateTime;
@@ -86,16 +86,16 @@ export default defineComponent({
     },
     temperatureUnit() {
       return (
-        WeatherEnums.TemperatureUnits[
+        WeatherComposition.TemperatureUnits[
           import.meta.env.VITE_DEFAULT_TEMPERATURE_UNIT
-        ] || WeatherEnums.TemperatureUnits.Celsius
+        ] || WeatherComposition.TemperatureUnits.Celsius
       );
     },
   },
   methods: {
     async updateForecastWeather(coord) {
       try {
-        this.data = await WeatherService.fetchForecastWeatherData(
+        this.data = await OpenWeatherMap.fetchForecastWeatherData(
           coord.lat,
           coord.lon,
           this.temperatureUnit.unit
@@ -111,13 +111,13 @@ export default defineComponent({
   async created() {
     console.log("Building ABC index...", new Date());
     this.loading = !this.loading;
-    CityRepository.createABCIndex();
+    CityFinder.createABCIndex();
 
     if (!this.currentLocation) {
       this.currentLocation = import.meta.env.VITE_DEFAULT_LOCATION;
     }
     let { coord } =
-      CityRepository.fetchLocationDetail(this.currentLocation) || {};
+      CityFinder.fetchLocationDetail(this.currentLocation) || {};
 
     if (coord) {
       this.updateForecastWeather(coord);

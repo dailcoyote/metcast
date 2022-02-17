@@ -1,6 +1,6 @@
 import Storage from "../data/city.list.json";
 
-class Cities {
+class CityFinder {
     constructor() {
         this._abcIndex = new Map();
     }
@@ -51,4 +51,4 @@ class Cities {
     }
 }
 
-export default new Cities();
+export default new CityFinder();
