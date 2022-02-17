@@ -1,29 +1,68 @@
 <template>
   <div id="back_container">
-    <ForecastDailyGrid
-      :dailyForecast="dailyForecast"
+    <ForecastHourlyGrid
+      :hourlyForecast="hourlyForecast"
       v-if="dailyForecast.length"
-    ></ForecastDailyGrid>
-    <ForecastWeeklyGrid :weeklyForecast="weeklyForecast"> </ForecastWeeklyGrid>
+    ></ForecastHourlyGrid>
+    <ForecastDailyGrid :weeklyForecast="weeklyForecast"> </ForecastDailyGrid>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
+import WeatherEnums from "../enums/Weather";
+import ForecastHourlyGrid from "./ForecastHourlyGrid.vue";
 import ForecastDailyGrid from "./ForecastDailyGrid.vue";
-import ForecastWeeklyGrid from "./ForecastWeeklyGrid.vue";
 
 export default defineComponent({
   name: "WeatherBack",
   components: {
+    ForecastHourlyGrid,
     ForecastDailyGrid,
-    ForecastWeeklyGrid,
+  },
+  props: {
+    hourlyWeatherStats: Array,
+    dailyWeatherStats: Array
   },
   data() {
     return {
       dailyForecast: new Array(),
       weeklyForecast: new Array(),
     };
+  },
+  computed: {
+    hourlyForecast() {
+      return this.hourlyWeatherStats.slice(0, 5).map((rec, i) => {
+        let time, g, asset, temperature;
+
+        time = new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+        })
+          .format(rec.dt * 1000)
+          .replace("pm", "PM")
+          .replace("am", "AM")
+          .split(" ")
+          .join("");
+        g = WeatherEnums.WeatherConditions[rec.weather[0]?.main];
+        asset = g.findWeatherAsset(rec.weather[0]?.id);
+        temperature = rec.temp > 0 ? "+" : "-";
+        temperature += Math.round(rec.temp) + "°";
+
+        if (i == 0) {
+          let now = new Date();
+          let diffSec = (now.getTime() - rec.dt * 1000) / 1000;
+          let diffMin = diffSec / 60;
+          time = diffMin < 60 ? "Now" : time;
+        }
+
+        return {
+          time,
+          asset,
+          temperature,
+        };
+      });
+    },
   },
   mounted() {
     this.dailyForecast = [

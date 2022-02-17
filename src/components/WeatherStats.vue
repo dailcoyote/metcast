@@ -69,7 +69,7 @@ export default defineComponent({
     },
     temperatureFormat() {
       let v = this.stats.tempValue > 0 ? "+" : "-";
-      v += this.stats.tempValue;
+      v += Math.round(this.stats.tempValue);
       v += this.stats.tempUnit;
       return v;
     },

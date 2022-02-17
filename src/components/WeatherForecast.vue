@@ -2,7 +2,10 @@
   <section id="weather__section" v-if="!loading">
     <WeatherLocation :location="currentLocation"></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
-    <WeatherBack></WeatherBack>
+    <WeatherBack
+      :hourlyWeatherStats="hourlyWeatherStats"
+      :dailyWeatherStats="dailyWeatherStats"
+    ></WeatherBack>
   </section>
 </template>
 
@@ -72,6 +75,12 @@ export default defineComponent({
       }
 
       return currentStats;
+    },
+    hourlyWeatherStats() {
+      return this?.data?.hourly || [];
+    },
+    dailyWeatherStats() {
+      return this?.data?.daily || [];
     },
     temperatureUnit() {
       return (
