@@ -12,7 +12,7 @@ app.mixin({
             },
         }
     }
-})
+});
 
 app.mount('#app');
 
