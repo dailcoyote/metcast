@@ -61,17 +61,19 @@ export default defineComponent({
       };
 
       if (this.data && this.data?.current) {
-        const currentWeatherInfo = this.data.current.weather[0];
+        const { weather, temp, wind_speed, pressure, humidity } =
+          this.data.current;
+        const currentWeatherInfo = weather[0];
         const g = WeatherEnums.WeatherConditions[currentWeatherInfo?.main];
         const asset = g.findWeatherAsset(currentWeatherInfo?.id);
 
         currentStats.dateTime = this.currentDateTime;
-        currentStats.tempValue = this.data.current.temp;
+        currentStats.tempValue = temp;
         currentStats.weatherDescription = currentWeatherInfo?.description || "";
         currentStats.weatherIcon = asset;
-        currentStats.windSpeed = this.data.current.wind_speed;
-        currentStats.pressure = this.data.current.pressure;
-        currentStats.humidity = this.data.current.humidity;
+        currentStats.windSpeed = wind_speed;
+        currentStats.pressure = pressure;
+        currentStats.humidity = humidity;
       }
 
       return currentStats;

@@ -44,7 +44,7 @@ class WeatherConditions {
     });
 
     static Rain = new WeatherConditions({
-        defaultAsset: WeatherConditions.Rain,
+        defaultAsset: WeatherIcons.Rain,
         linkedCodes: [{
             id: 500,
             asset: WeatherIcons.LightRain
@@ -70,7 +70,7 @@ class WeatherConditions {
     })
 
     static Snow = new WeatherConditions({
-        defaultAsset: WeatherConditions.Snow,
+        defaultAsset: WeatherIcons.Snow,
         linkedCodes: [{
             id: 600,
             asset: WeatherIcons.LightSnow

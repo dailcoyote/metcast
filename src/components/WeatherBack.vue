@@ -1,10 +1,7 @@
 <template>
   <div id="back_container">
-    <ForecastHourlyGrid
-      :hourlyForecast="hourlyForecast"
-      v-if="dailyForecast.length"
-    ></ForecastHourlyGrid>
-    <ForecastDailyGrid :weeklyForecast="weeklyForecast"> </ForecastDailyGrid>
+    <ForecastHourlyGrid :hourlyForecast="hourlyForecast"></ForecastHourlyGrid>
+    <ForecastDailyGrid :dailyForecast="dailyForecast"> </ForecastDailyGrid>
   </div>
 </template>
 
@@ -22,19 +19,15 @@ export default defineComponent({
   },
   props: {
     hourlyWeatherStats: Array,
-    dailyWeatherStats: Array
-  },
-  data() {
-    return {
-      dailyForecast: new Array(),
-      weeklyForecast: new Array(),
-    };
+    dailyWeatherStats: Array,
   },
   computed: {
     hourlyForecast() {
       return this.hourlyWeatherStats.slice(0, 5).map((rec, i) => {
-        let time, g, asset, temperature;
+        let time, asset, temperature;
 
+        asset = this.defineAsset(rec.weather[0]?.main, rec.weather[0]?.id);
+        temperature = this.convert2TemperatureFormat(rec.temp);
         time = new Intl.DateTimeFormat("en-US", {
           hour: "numeric",
           minute: "numeric",
@@ -44,10 +37,6 @@ export default defineComponent({
           .replace("am", "AM")
           .split(" ")
           .join("");
-        g = WeatherEnums.WeatherConditions[rec.weather[0]?.main];
-        asset = g.findWeatherAsset(rec.weather[0]?.id);
-        temperature = rec.temp > 0 ? "+" : "-";
-        temperature += Math.round(rec.temp) + "°";
 
         if (i == 0) {
           let now = new Date();
@@ -63,73 +52,44 @@ export default defineComponent({
         };
       });
     },
+    dailyForecast() {
+      const dateFormatOptions = { month: "short", day: "2-digit" };
+      const dayFormatOptions = { weekday: "long" };
+
+      return this.dailyWeatherStats.slice(0, 5).map((rec) => {
+        let date, day, asset, highTempValue, lowTempValue;
+
+        date = new Intl.DateTimeFormat("en-US", dateFormatOptions).format(
+          new Date(rec.dt * 1000)
+        );
+        day = new Intl.DateTimeFormat("en-US", dayFormatOptions).format(
+          new Date(rec.dt * 1000)
+        );
+        asset = this.defineAsset(rec.weather[0]?.main, rec.weather[0]?.id);
+        highTempValue = this.convert2TemperatureFormat(rec.temp?.max);
+        lowTempValue = this.convert2TemperatureFormat(rec.temp?.min);
+
+        return {
+          date,
+          day,
+          asset,
+          highTempValue,
+          lowTempValue,
+        };
+      });
+    },
   },
-  mounted() {
-    this.dailyForecast = [
-      {
-        time: "Now",
-        asset: this.assets.weather.sun,
-        temperature: "+28°",
-      },
-      {
-        time: "3:00PM",
-        asset: this.assets.weather.rainCloudLow,
-        temperature: "+25°",
-      },
-      {
-        time: "4:00PM",
-        asset: this.assets.weather.rain,
-        temperature: "+24°",
-      },
-      {
-        time: "5:00PM",
-        asset: this.assets.weather.heavyRain,
-        temperature: "+24°",
-      },
-      {
-        time: "6:00PM",
-        asset: this.assets.weather.stormyWeather,
-        temperature: "+20°",
-      },
-    ];
-    this.weeklyForecast = [
-      {
-        date: "Aug 15th",
-        day: "Sunday",
-        asset: this.assets.weather.rainCloudLow,
-        highTempValue: "+26°",
-        lowTempValue: "+21°",
-      },
-      {
-        date: "Aug 16th",
-        day: "Monday",
-        asset: this.assets.weather.clouds,
-        highTempValue: "+24°",
-        lowTempValue: "+22°",
-      },
-      {
-        date: "Aug 17th",
-        day: "Tuesday",
-        asset: this.assets.weather.rainCloudLow,
-        highTempValue: "+20",
-        lowTempValue: "+15°",
-      },
-      {
-        date: "Aug 18th",
-        day: "Wednesday",
-        asset: this.assets.weather.rain,
-        highTempValue: "+18°",
-        lowTempValue: "+15°",
-      },
-      {
-        date: "Aug 19th",
-        day: "Thursday",
-        asset: this.assets.weather.stormyWeather,
-        highTempValue: "+15°",
-        lowTempValue: "+9°",
-      },
-    ];
-  },
+  methods: {
+    convert2TemperatureFormat(tempValue) {
+      let v = tempValue > 0 ? "+" : "-";
+      v += Math.round(tempValue) + "°";
+      return v;
+    },
+    defineAsset(type, id) {
+      let g = WeatherEnums.WeatherConditions[type];
+      return g.findWeatherAsset(id);
+    },
+  }
 });
 </script>
 

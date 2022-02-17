@@ -2,7 +2,7 @@
   <div id="forecast_daily__grid">
     <div class="box col">
       <ForecastCard
-        v-for="(item, i) in weeklyForecast"
+        v-for="(item, i) in dailyForecast"
         :key="i"
         :class="i > 0 && 'mt-2hf'"
         :date="item.date"
@@ -26,7 +26,7 @@ export default defineComponent({
     ForecastCard,
   },
   props: {
-    weeklyForecast: Array,
+    dailyForecast: Array,
   },
 });
 </script>
