@@ -81,13 +81,13 @@ export default defineComponent({
   },
   methods: {
     convert2TemperatureFormat(tempValue) {
-      let v = tempValue > 0 ? "+" : "-";
+      let v = tempValue > 0 ? "+" : '';
       v += Math.round(tempValue) + "°";
       return v;
     },
     defineAsset(type, id) {
       let g = WeatherEnums.WeatherConditions[type];
-      return g.findWeatherAsset(id);
+      return g && g.findWeatherAsset(id);
     },
   }
 });

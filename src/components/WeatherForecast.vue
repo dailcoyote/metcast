@@ -65,7 +65,7 @@ export default defineComponent({
           this.data.current;
         const currentWeatherInfo = weather[0];
         const g = WeatherEnums.WeatherConditions[currentWeatherInfo?.main];
-        const asset = g.findWeatherAsset(currentWeatherInfo?.id);
+        const asset = g && g.findWeatherAsset(currentWeatherInfo?.id);
 
         currentStats.dateTime = this.currentDateTime;
         currentStats.tempValue = temp;

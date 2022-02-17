@@ -47,7 +47,7 @@ import wind from "../assets/wind.png";
 export default defineComponent({
   name: "WeatherStats",
   props: {
-    stats: Object
+    stats: Object,
   },
   data() {
     return {
@@ -61,14 +61,14 @@ export default defineComponent({
   },
   computed: {
     descriptionFormat() {
-      let words = this.stats.weatherDescription.split(' ');
-      words.forEach(function(w,i) {
+      let words = this.stats.weatherDescription.split(" ");
+      words.forEach(function (w, i) {
         words[i] = w.charAt(0).toUpperCase() + w.slice(1);
       });
-      return words.join(' ');
+      return words.join(" ");
     },
     temperatureFormat() {
-      let v = this.stats.tempValue > 0 ? "+" : "-";
+      let v = this.stats.tempValue > 0 ? "+" : '';
       v += Math.round(this.stats.tempValue);
       v += this.stats.tempUnit;
       return v;

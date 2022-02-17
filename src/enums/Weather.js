@@ -86,7 +86,7 @@ class WeatherConditions {
         }]
     });
 
-    static Atmosphere = new WeatherConditions({
+    static Mist = new WeatherConditions({
         defaultAsset: WeatherIcons.CloudLightning
     })
 
