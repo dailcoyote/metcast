@@ -33,11 +33,11 @@
     <template v-slot:body>
       <ul>
         <li
-          v-for="(location, i) in locationList"
-          :key="location.name + i"
-          class="pointer hover:bg-gray-light"
+          v-for="location in locationList"
+          :key="location.id"
+          class="pointer"
         >
-          {{ location.name }}, {{ location.country }}
+          <span v-html="location.htmlFormat"></span>
         </li>
       </ul>
     </template>
@@ -100,7 +100,7 @@ export default defineComponent({
     },
     clearSearchRef() {
       this.locationList = [];
-    }
+    },
   },
 });
 </script>
@@ -133,16 +133,19 @@ export default defineComponent({
 
 ul {
   list-style-type: none;
-  margin: 0 15px;
 }
 
 li {
-  margin-bottom: 20px;
-  /* font-weight: bold; */
+  padding: 10px 15px 10px 15px;
+}
+
+ul > li:hover {
+  background: #eceef2;
+}
+
+ul > li > span {
   font-size: 18px;
   line-height: 38px;
-
-  color: #000000;
 }
 
 form {

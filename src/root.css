@@ -14,6 +14,12 @@ main {
     justify-content: center;
 }
 
+mark {
+    font-weight: bold !important;
+    color: #000000 !important;
+    background: none;
+}
+
 .box {
     display: flex;
 }
@@ -44,10 +50,6 @@ main {
 
 .black--color {
     color: #000000;
-}
-
-.bg-gray-light {
-    background: #eceef2;
 }
 
 .w20 {

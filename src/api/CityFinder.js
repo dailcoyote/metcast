@@ -35,11 +35,20 @@ class CityFinder {
         for (let index = 0; index < branch.length; index++) {
             const cursor = branch[index];
             if (
-                cursor.name.toLowerCase().includes(searchTerm.toLowerCase())
+                cursor.name.substr(0, searchTerm.length) === searchTerm
                 && matches < 10
             ) {
+                const { id, coord } = cursor;
+                let htmlFormat = cursor.name
+                    .replace(searchTerm, `<mark>${searchTerm}</mark>`)
+                    .concat(', ')
+                    .concat(cursor.country);
                 matches++
-                suggestions.push(cursor);
+                suggestions.push({
+                    htmlFormat,
+                    coord,
+                    id
+                });
             }
 
             if (matches > 10) {
