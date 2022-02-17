@@ -108,7 +108,7 @@ export default defineComponent({
       }
     },
   },
-  async created() {
+  created() {
     console.log("Building ABC index...", new Date());
     this.loading = !this.loading;
     CityFinder.createABCIndex();

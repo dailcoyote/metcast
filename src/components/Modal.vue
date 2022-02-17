@@ -60,7 +60,7 @@ export default defineComponent({
 
 .modal-header {
   position: relative;
-  padding: 21px 15px;
+  padding: 21px 10px;
   display: flex;
   border-bottom: 1px solid #eeeeee;
   color: #4aae9b;

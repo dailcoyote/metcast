@@ -25,13 +25,20 @@
       <form>
         <input type="text" placeholder=" " />
         <button type="reset">
-          <!-- &times; -->
           <img :src="icons.grayClose" width="22" height="22" />
         </button>
       </form>
     </template>
 
-    <template v-slot:body> This is a new modal body. </template>
+    <template v-slot:body>
+      <ul>
+        <li class="pointer">Atlanta, US</li>
+        <li class="pointer">Atlanta, US</li>
+        <li class="pointer">Atlanta, US</li>
+        <li class="pointer">Atlanta, US</li>
+        <li class="pointer">Atlanta, US</li>
+      </ul>
+    </template>
   </Modal>
 </template>
 
@@ -78,6 +85,7 @@ export default defineComponent({
   display: flex;
   justify-content: center;
 }
+
 #settings__block {
   width: 24px;
 }
@@ -85,6 +93,7 @@ export default defineComponent({
 #location_block > img {
   margin-right: 2px;
 }
+
 #location_block > span {
   font-weight: bold;
   font-size: 18px;
@@ -96,6 +105,20 @@ export default defineComponent({
   color: #ffffff;
 }
 
+ul {
+  list-style-type: none;
+  margin: 0 15px;
+}
+
+li {
+  margin-bottom: 20px;
+  /* font-weight: bold; */
+  font-size: 18px;
+  line-height: 38px;
+
+  color: #000000;
+}
+
 form {
   position: relative;
   width: 350px;
@@ -105,10 +128,16 @@ form input {
   background: #eceef2;
   width: 100%;
   height: 41px;
-  padding: 11px 26px;
+  padding: 11px 15px;
   box-sizing: border-box;
   border-radius: 7px;
   border: none;
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 38px;
+  /* identical to box height */
+
+  color: #000000;
 }
 
 form input:placeholder-shown + button {
