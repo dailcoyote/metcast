@@ -33,11 +33,12 @@
     <template v-slot:body>
       <ul>
         <li
-          v-for="location in locationList"
-          :key="location.id"
+          v-for="rec in locationDetailList"
+          :key="rec.id"
           class="pointer"
+          @click="selectLocation(rec)"
         >
-          <span v-html="location.htmlFormat"></span>
+          <span v-html="rec.htmlFormat"></span>
         </li>
       </ul>
     </template>
@@ -56,7 +57,9 @@ export default defineComponent({
   name: "WeatherLocation",
   props: {
     location: String,
-    suggestionsFunc: Function,
+    registerCurrentLocationFunc: Function,
+    applySuggestionsFunc: Function,
+    updateForecastWeatherFunc: Function,
   },
   components: {
     Modal,
@@ -76,7 +79,7 @@ export default defineComponent({
         grayClose,
       },
       isModalVisible: false,
-      locationList: new Array(),
+      locationDetailList: new Array(),
     };
   },
   watch: {
@@ -84,10 +87,7 @@ export default defineComponent({
       this.clearSearchRef();
 
       if (newTerms && newTerms.length >= 3) {
-        console.log(newTerms);
-        let ret = this.suggestionsFunc(newTerms);
-        console.log(ret);
-        this.locationList = [...ret];
+        this.locationDetailList = [...this.applySuggestionsFunc(newTerms)];
       }
     },
   },
@@ -98,8 +98,14 @@ export default defineComponent({
     closeModal() {
       this.isModalVisible = false;
     },
+    selectLocation({ location, coord }) {
+      this.searchTerm = "";
+      this.registerCurrentLocationFunc(location);
+      this.updateForecastWeatherFunc(coord);
+      this.closeModal();
+    },
     clearSearchRef() {
-      this.locationList = [];
+      this.locationDetailList = [];
     },
   },
 });

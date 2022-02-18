@@ -2,7 +2,9 @@
   <section id="weather__section" v-if="!loading">
     <WeatherLocation
       :location="currentLocation"
-      :suggestionsFunc="suggestionsFunc"
+      :registerCurrentLocationFunc="registerCurrentLocation"
+      :applySuggestionsFunc="applySuggestions"
+      :updateForecastWeatherFunc="updateForecastWeather"
     ></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
     <WeatherBack
@@ -33,7 +35,7 @@ export default defineComponent({
       loading: false,
       data: undefined,
       currentLocation: undefined,
-      suggestionsFunc: CityFinder.getSuggestions.bind(CityFinder),
+      applySuggestions: CityFinder.getSuggestions.bind(CityFinder),
     };
   },
   computed: {
@@ -112,7 +114,7 @@ export default defineComponent({
         if (this.loading) this.loading = !this.loading;
       }
     },
-    setCurrentLocation(location = import.meta.env.VITE_DEFAULT_LOCATION) {
+    registerCurrentLocation(location = import.meta.env.VITE_DEFAULT_LOCATION) {
       this.currentLocation = location;
     },
   },
@@ -122,7 +124,7 @@ export default defineComponent({
     CityFinder.createABCIndex();
 
     if (!this.currentLocation) {
-      this.setCurrentLocation();
+      this.registerCurrentLocation();
     }
     let { coord } = CityFinder.fetchLocationDetail(this.currentLocation) || {};
 

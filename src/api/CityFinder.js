@@ -20,8 +20,9 @@ class CityFinder {
         }
     }
     fetchLocationDetail(location) {
-        const [city, country] = location.split(',');
-        return (this._abcIndex.get(location?.charAt(0)) || [])
+        const [city, country] = location.split(','),
+            branch = this._abcIndex.get(location?.charAt(0)) || [];
+        return branch
             .find(
                 (cursor) => cursor.name.toLowerCase().includes(city?.toLowerCase())
                     && cursor.country.toLowerCase().includes(country?.toLowerCase())
@@ -33,21 +34,19 @@ class CityFinder {
         let suggestions = [];
 
         for (let index = 0; index < branch.length; index++) {
-            const cursor = branch[index];
+            const { id, coord, name, country } = branch[index];
             if (
-                cursor.name.substr(0, searchTerm.length) === searchTerm
+                name.substr(0, searchTerm.length) === searchTerm
                 && matches < 10
             ) {
-                const { id, coord } = cursor;
-                let htmlFormat = cursor.name
+                let htmlFormat = name
                     .replace(searchTerm, `<mark>${searchTerm}</mark>`)
                     .concat(', ')
-                    .concat(cursor.country);
+                    .concat(country);
+                let location = name + "," + country;
                 matches++
                 suggestions.push({
-                    htmlFormat,
-                    coord,
-                    id
+                    id, htmlFormat, coord, location
                 });
             }
 
