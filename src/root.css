@@ -24,6 +24,16 @@ mark {
     display: flex;
 }
 
+.justify-center {
+    display: flex;
+    justify-content: center;
+}
+
+.justify-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
 .row {
     flex-direction: row;
 }
@@ -74,6 +84,14 @@ mark {
 
 .w50 {
     width: 50%;
+}
+
+.w100 {
+    width: 100%;;
+}
+
+.px-15p {
+    padding: 0 15px;
 }
 
 .ml-4 {

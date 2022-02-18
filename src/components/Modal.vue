@@ -1,5 +1,5 @@
 <template>
-  <div class="modal-backdrop">
+  <div class="modal-backdrop" :style="axisPosition">
     <div
       class="modal"
       role="dialog"
@@ -25,7 +25,15 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "Modal"
+  name: "Modal",
+  props: {
+    zindex: Number
+  }, 
+  computed: {
+    axisPosition() {
+      return `z-index: ${this.zindex}`
+    }
+  }
 });
 </script>
 
@@ -40,7 +48,6 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 555;
 }
 
 .modal {
@@ -64,7 +71,6 @@ export default defineComponent({
 
 .modal-body {
   position: relative;
-  padding: 20px 10px;
 }
 
 .btn-close {

@@ -1,13 +1,7 @@
 <template>
   <div class="box">
     <div id="location_block" class="row">
-      <img
-        :src="icons.location"
-        width="20"
-        height="20"
-        class="pointer"
-        @click="showModal"
-      />
+      <img :src="icons.location" width="20" height="20" class="pointer" />
       <span>{{ location }}</span>
     </div>
     <div id="settings__block">
@@ -16,13 +10,14 @@
         width="24"
         height="24"
         class="pointer"
-        @click="showModal"
+        @click="showSettingsModal"
       />
     </div>
   </div>
-  <Modal v-show="isModalVisible" @close="closeModal">
+  <!-- Search Modal -->
+  <Modal v-show="isSearchModalVisible" @close="closeSearchModal" :zindex="777">
     <template v-slot:header>
-      <form>
+      <form id="search-box">
         <input type="text" placeholder=" " v-model="searchTerm" />
         <button type="reset" @click="clearSearchRef">
           <img :src="icons.grayClose" width="22" height="22" />
@@ -43,15 +38,92 @@
       </ul>
     </template>
   </Modal>
+  <!--  Settings Modal -->
+  <Modal v-show="isSettingsModalVisible" :zindex="555">
+    <template v-slot:header>
+      <div class="settings-section box row w100 px-15p">
+        <div class="w50">
+          <h4 class="settings-title">Settings</h4>
+        </div>
+        <div class="w50 justify-end">
+          <button @click="closeSettingsModal">
+            <img :src="icons.redClose" width="22" height="22" />
+          </button>
+        </div>
+      </div>
+    </template>
+
+    <template v-slot:body>
+      <div class="settings-unit-start">
+        <span>Location</span>
+      </div>
+      <div class="unit-section">
+        <div class="box row w100">
+          <div class="w50">
+            <span class="unit-section_title">Current Location</span>
+          </div>
+          <div class="w50 justify-end">
+            <span
+              class="unit-section_location pointer"
+              @click="showSearchModal"
+            >
+              Atlanta,US
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="settings-unit-start">
+        <span>Measure Units</span>
+      </div>
+      <div class="unit-section border-bottom">
+        <div class="box row w100">
+          <div class="w50 box center">
+            <span class="unit-section_title">Temperature</span>
+          </div>
+          <div class="w50 justify-end">
+            <Switcher :onState="{ value: 'C°' }" :offState="{ value: 'F°' }" />
+          </div>
+        </div>
+      </div>
+      <div class="unit-section border-bottom">
+        <div class="box row w100">
+          <div class="w50 box center">
+            <span class="unit-section_title">Wind Speed</span>
+          </div>
+          <div class="w50 justify-end">
+            <Switcher
+              :onState="{ value: 'm/s' }"
+              :offState="{ value: 'mph' }"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="unit-section border-bottom">
+        <div class="box row w100">
+          <div class="w50 box center">
+            <span class="unit-section_title">Pressure</span>
+          </div>
+          <div class="w50 justify-end">
+            <Switcher
+              :onState="{ value: 'mmHg' }"
+              :offState="{ value: 'hPa' }"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+  </Modal>
 </template>
 
 <script>
 import { defineComponent, ref } from "vue";
 
 import Modal from "./Modal.vue";
+import Switcher from "./Switcher.vue";
 import location from "../assets/location.png";
 import settings from "../assets/settings.png";
 import grayClose from "../assets/gray_close.png";
+import redClose from "../assets/close.png";
 
 export default defineComponent({
   name: "WeatherLocation",
@@ -63,6 +135,7 @@ export default defineComponent({
   },
   components: {
     Modal,
+    Switcher,
   },
   setup() {
     let searchTerm = ref("");
@@ -77,8 +150,10 @@ export default defineComponent({
         location,
         settings,
         grayClose,
+        redClose,
       },
-      isModalVisible: false,
+      isSearchModalVisible: false,
+      isSettingsModalVisible: false,
       locationDetailList: new Array(),
     };
   },
@@ -92,17 +167,23 @@ export default defineComponent({
     },
   },
   methods: {
-    showModal() {
-      this.isModalVisible = true;
+    showSettingsModal() {
+      this.isSettingsModalVisible = true;
     },
-    closeModal() {
-      this.isModalVisible = false;
+    closeSettingsModal() {
+      this.isSettingsModalVisible = false;
+    },
+    showSearchModal() {
+      this.isSearchModalVisible = true;
+    },
+    closeSearchModal() {
+      this.isSearchModalVisible = false;
     },
     selectLocation({ location, coord }) {
       this.searchTerm = "";
       this.registerCurrentLocationFunc(location);
       this.updateForecastWeatherFunc(coord);
-      this.closeModal();
+      this.closeSearchModal();
     },
     clearSearchRef() {
       this.locationDetailList = [];
@@ -137,6 +218,64 @@ export default defineComponent({
   color: #ffffff;
 }
 
+.settings-section > div > h4 {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 26px;
+  /* identical to box height */
+
+  color: #000000;
+}
+
+.settings-section > div > button {
+  border: none;
+  display: block;
+  background: transparent;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.settings-unit-start {
+  background: #eceef2;
+  padding: 9px 25px;
+}
+
+.settings-unit-start > span {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #a8abb4;
+}
+
+.unit-section {
+  padding: 16px 25px;
+}
+
+.unit-section_title {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  /* identical to box height */
+
+  color: #000000;
+}
+
+.unit-section_location {
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 21px;
+  text-align: right;
+  text-transform: uppercase;
+
+  color: #2196f3;
+}
+
+.border-bottom {
+  border-bottom: 1px solid #a8abb4;
+}
+
 ul {
   list-style-type: none;
 }
@@ -154,12 +293,12 @@ ul > li > span {
   line-height: 38px;
 }
 
-form {
+#search-box {
   position: relative;
   width: 350px;
 }
 
-form input {
+#search-box > input {
   background: #eceef2;
   width: 100%;
   height: 41px;
@@ -175,12 +314,12 @@ form input {
   color: #000000;
 }
 
-form input:placeholder-shown + button {
+#search-box > input:placeholder-shown + button {
   opacity: 0;
   pointer-events: none;
 }
 
-form button {
+#search-box > button {
   position: absolute;
   border: none;
   display: block;
