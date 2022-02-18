@@ -25,12 +25,7 @@
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "Modal",
-  methods: {
-    close() {
-      this.$emit("close");
-    },
-  },
+  name: "Modal"
 });
 </script>
 
