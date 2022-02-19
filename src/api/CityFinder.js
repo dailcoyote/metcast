@@ -7,16 +7,16 @@ class CityFinder {
     createABCIndex() {
         for (let index = 0; index < Storage.length; index++) {
             const cursor = Storage[index];
-            const capital = cursor.name.charAt(0);
+            const key = cursor.name.charAt(0);
 
-            if (!this._abcIndex.has(capital)) {
-                this._abcIndex.set(capital, [cursor]);
+            if (!this._abcIndex.has(key)) {
+                this._abcIndex.set(key, [cursor]);
                 continue;
             }
 
-            const branch = this._abcIndex.get(capital);
+            const branch = this._abcIndex.get(key);
             branch.push(cursor);
-            this._abcIndex.set(capital, branch);
+            this._abcIndex.set(key, branch);
         }
     }
     fetchLocationDetail(location) {

@@ -2,7 +2,7 @@
   <div class="box">
     <div id="location_block" class="row">
       <img :src="icons.location" width="20" height="20" class="pointer" />
-      <span>{{ defaultLocation }}</span>
+      <span>{{ defaultSettings.location }}</span>
     </div>
     <div id="settings__block">
       <img
@@ -31,7 +31,7 @@
           v-for="rec in locationDetailList"
           :key="rec.id"
           class="pointer"
-          @click="selectLocation(rec)"
+          @click="onLocationSelected(rec)"
         >
           <span v-html="rec.htmlFormat"></span>
         </li>
@@ -111,6 +111,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
+import WeatherComposition from "../types/WeatherComposition";
 
 import Modal from "./Modal.vue";
 import Switch from "./Switch.vue";
@@ -122,10 +123,13 @@ import redClose from "../assets/close.png";
 export default defineComponent({
   name: "WeatherLocation",
   props: {
-    defaultLocation: String,
-    registerCurrentLocationFunc: Function,
+    defaultSettings: {
+      location: String,
+      temp: String,
+      wind: String,
+      pressure: String,
+    },
     applySuggestionsFunc: Function,
-    updateForecastWeatherFunc: Function,
   },
   components: {
     Modal,
@@ -139,6 +143,8 @@ export default defineComponent({
     };
   },
   data() {
+    const { TemperatureUnits, WindSpeedUnits, PressureUnits } =
+      WeatherComposition;
     return {
       icons: {
         location,
@@ -150,21 +156,22 @@ export default defineComponent({
       measureUnitsForm: {
         temp: {
           title: "Temperature",
-          leftLabelSwitcher: "C°",
-          rightLabelSwitcher: "F°",
-          selected: "C°",
+          leftLabelSwitcher: TemperatureUnits.Celsius,
+          rightLabelSwitcher: TemperatureUnits.Fahrenheit,
+          selected: this.defaultSettings.temp || TemperatureUnits.Celsius,
         },
         wind: {
           title: "Wind Speed",
-          leftLabelSwitcher: "m/s",
-          rightLabelSwitcher: "mph",
-          selected: "mph",
+          leftLabelSwitcher: WindSpeedUnits.MeterPerSec,
+          rightLabelSwitcher: WindSpeedUnits.MilesPerHour,
+          selected:
+            this.defaultSettings.windSpeed || WindSpeedUnits.MeterPerSec,
         },
         pressure: {
           title: "Pressure",
-          leftLabelSwitcher: "mmHg",
-          rightLabelSwitcher: "hPa",
-          selected: "mmHg",
+          leftLabelSwitcher: PressureUnits.MillimetreOfMercury,
+          rightLabelSwitcher: PressureUnits.Pascal,
+          selected: this.defaultSettings.pressure || PressureUnits.Pascal,
         },
       },
       isSearchModalVisible: false,
@@ -174,7 +181,9 @@ export default defineComponent({
   },
   computed: {
     tempLocation() {
-      return this.selectedDetailLocation?.location || this.defaultLocation;
+      return (
+        this.selectedDetailLocation?.location || this.defaultSettings.location
+      );
     },
   },
   watch: {
@@ -199,8 +208,7 @@ export default defineComponent({
     closeSearchModal() {
       this.isSearchModalVisible = false;
     },
-    selectLocation(detail) {
-      // const { location, coord } = detail;
+    onLocationSelected(detail) {
       this.selectedDetailLocation = detail;
       this.searchTerm = "";
       // this.registerCurrentLocationFunc(location);

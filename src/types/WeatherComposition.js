@@ -115,22 +115,42 @@ class WeatherConditions {
 }
 
 class TemperatureUnits {
-    static Celsius = {
-        grade: "°C",
-        unit: 'metric'
-    };
-    static Fahrenheit = {
-        grade: "°F",
-        unit: 'imperial'
-    };
-    static Kelvin = {
-        grade: "K",
-        unit: 'default'
+    static Celsius = "°C";
+    static Fahrenheit = "°F";
+    static Kelvin = "K"
+}
+
+class WindSpeedUnits {
+    static MeterPerSec  = 'm/s';
+    static MilesPerHour = 'mph';
+}
+
+class PressureUnits {
+    static MillimetreOfMercury = "mmHg";
+    static Pascal = 'hPa';
+}
+
+class MeasurementUnits {
+    static Metric = {
+        temp: TemperatureUnits.Celsius,
+        windSpeed: WindSpeedUnits.MeterPerSec,
+        pressure: PressureUnits.Pascal
+    } 
+    static Imperial = {
+        temp: TemperatureUnits.Fahrenheit,
+        windSpeed: WindSpeedUnits.MilesPerHour,
+        pressure: PressureUnits.Pascal
     }
+    // static convertMs2Mph() {
+
+    // }
 }
 
 export default {
     WeatherIcons,
     WeatherConditions,
-    TemperatureUnits
+    TemperatureUnits,
+    WindSpeedUnits,
+    PressureUnits,
+    MeasurementUnits
 };

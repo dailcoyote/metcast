@@ -1,10 +1,8 @@
 <template>
   <section id="weather__section" v-if="!loading">
     <WeatherLocation
-      :defaultLocation="currentLocation"
-      :registerCurrentLocationFunc="registerCurrentLocation"
+      :defaultSettings="defaultSettings"
       :applySuggestionsFunc="applySuggestions"
-      :updateForecastWeatherFunc="updateForecastWeather"
     ></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
     <WeatherBack
@@ -33,8 +31,13 @@ export default defineComponent({
   data() {
     return {
       loading: false,
-      data: undefined,
-      currentLocation: undefined,
+      defaultSettings: {
+        location: undefined,
+        temp: undefined,
+        wind: undefined,
+        pressure: undefined,
+      },
+      currentWeatherData: undefined,
       applySuggestions: CityFinder.getSuggestions.bind(CityFinder),
     };
   },
@@ -49,8 +52,8 @@ export default defineComponent({
           minute: "numeric",
           hour12: true,
         };
-      if (this.data && this.data?.current) {
-        date = new Date(this.data.current.dt * 1000);
+      if (this.currentWeatherData && this.currentWeatherData?.current) {
+        date = new Date(this.currentWeatherData.current.dt * 1000);
       }
       return new Intl.DateTimeFormat("en-US", options).format(date);
     },
@@ -58,17 +61,19 @@ export default defineComponent({
       let currentStats = {
         dateTime: new Date().toGMTString(),
         tempValue: 0.0,
-        tempUnit: this.temperatureUnit.grade,
         weatherIcon: undefined,
         weatherDescription: "",
         windSpeed: 0.0,
         pressure: 0.0,
         humidity: 0.0,
+        tempUnit: this.defaultSettings.temp,
+        windSpeedUnit: this.defaultSettings.windSpeed,
+        pressureUnit: this.defaultSettings.pressure,
       };
 
-      if (this.data && this.data?.current) {
+      if (this.currentWeatherData && this.currentWeatherData?.current) {
         const { weather, temp, wind_speed, pressure, humidity } =
-          this.data.current;
+          this.currentWeatherData.current;
         const currentWeatherInfo = weather[0];
         const g =
           WeatherComposition.WeatherConditions[currentWeatherInfo?.main];
@@ -85,27 +90,25 @@ export default defineComponent({
 
       return currentStats;
     },
+    currentMeasureUnit() {
+      return WeatherComposition.MeasurementUnits[
+        import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT
+      ];
+    },
     hourlyWeatherStats() {
-      return this?.data?.hourly || [];
+      return this?.currentWeatherData?.hourly || [];
     },
     dailyWeatherStats() {
-      return this?.data?.daily || [];
-    },
-    temperatureUnit() {
-      return (
-        WeatherComposition.TemperatureUnits[
-          import.meta.env.VITE_DEFAULT_TEMPERATURE_UNIT
-        ] || WeatherComposition.TemperatureUnits.Celsius
-      );
+      return this?.currentWeatherData?.daily || [];
     },
   },
   methods: {
     async updateForecastWeather(coord) {
       try {
-        this.data = await OpenWeatherMap.fetchForecastWeatherData(
+        this.currentWeatherData = await OpenWeatherMap.fetchForecastWeatherData(
           coord.lat,
           coord.lon,
-          this.temperatureUnit.unit
+          import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT
         );
         console.log("Forecast updated");
       } catch (error) {
@@ -114,19 +117,25 @@ export default defineComponent({
         if (this.loading) this.loading = !this.loading;
       }
     },
-    registerCurrentLocation(location = import.meta.env.VITE_DEFAULT_LOCATION) {
-      this.currentLocation = location;
+    setCurrentLocation(location) {
+      this.defaultSettings.location = location;
+    },
+    fillDefaultSettings() {
+      this.defaultSettings.location = import.meta.env.VITE_DEFAULT_LOCATION;
+      this.defaultSettings.temp = this.currentMeasureUnit.temp;
+      this.defaultSettings.wind = this.currentMeasureUnit.windSpeed;
+      this.defaultSettings.pressure = this.currentMeasureUnit.pressure;
     },
   },
   created() {
     console.log("Building ABC index...", new Date());
     this.loading = !this.loading;
+
+    this.fillDefaultSettings();
     CityFinder.createABCIndex();
 
-    if (!this.currentLocation) {
-      this.registerCurrentLocation();
-    }
-    let { coord } = CityFinder.fetchLocationDetail(this.currentLocation) || {};
+    let { coord } =
+      CityFinder.fetchLocationDetail(this.defaultSettings.location) || {};
 
     if (coord) {
       this.updateForecastWeather(coord);

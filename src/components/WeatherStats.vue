@@ -74,10 +74,10 @@ export default defineComponent({
       return v;
     },
     windSpeedTextFormat() {
-      return this.stats.windSpeed + "m.e, E";
+      return this.stats.windSpeed + this.stats.windSpeedUnit + "," + " E ";
     },
     pressureTextFormat() {
-      return this.stats.pressure + "hPa";
+      return this.stats.pressure + this.stats.pressureUnit;
     },
     humidityTextFormat() {
       return this.stats.humidity + "%";
