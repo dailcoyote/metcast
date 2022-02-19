@@ -2,7 +2,7 @@
   <div class="box">
     <div id="location_block" class="row">
       <img :src="icons.location" width="20" height="20" class="pointer" />
-      <span>{{ location }}</span>
+      <span>{{ defaultLocation }}</span>
     </div>
     <div id="settings__block">
       <img
@@ -67,7 +67,7 @@
               class="unit-section_location pointer"
               @click="showSearchModal"
             >
-              Atlanta,US
+              {{ tempLocation }}
             </span>
           </div>
         </div>
@@ -122,7 +122,7 @@ import redClose from "../assets/close.png";
 export default defineComponent({
   name: "WeatherLocation",
   props: {
-    location: String,
+    defaultLocation: String,
     registerCurrentLocationFunc: Function,
     applySuggestionsFunc: Function,
     updateForecastWeatherFunc: Function,
@@ -146,6 +146,7 @@ export default defineComponent({
         grayClose,
         redClose,
       },
+      selectedDetailLocation: undefined,
       measureUnitsForm: {
         temp: {
           title: "Temperature",
@@ -171,6 +172,11 @@ export default defineComponent({
       locationDetailList: new Array(),
     };
   },
+  computed: {
+    tempLocation() {
+      return this.selectedDetailLocation?.location || this.defaultLocation;
+    },
+  },
   watch: {
     searchTerm(newTerms) {
       this.clearSearchRef();
@@ -193,10 +199,12 @@ export default defineComponent({
     closeSearchModal() {
       this.isSearchModalVisible = false;
     },
-    selectLocation({ location, coord }) {
+    selectLocation(detail) {
+      // const { location, coord } = detail;
+      this.selectedDetailLocation = detail;
       this.searchTerm = "";
-      this.registerCurrentLocationFunc(location);
-      this.updateForecastWeatherFunc(coord);
+      // this.registerCurrentLocationFunc(location);
+      // this.updateForecastWeatherFunc(coord);
       this.closeSearchModal();
     },
     onMeasureChanged(unit, { active }) {

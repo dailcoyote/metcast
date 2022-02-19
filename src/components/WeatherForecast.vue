@@ -1,7 +1,7 @@
 <template>
   <section id="weather__section" v-if="!loading">
     <WeatherLocation
-      :location="currentLocation"
+      :defaultLocation="currentLocation"
       :registerCurrentLocationFunc="registerCurrentLocation"
       :applySuggestionsFunc="applySuggestions"
       :updateForecastWeatherFunc="updateForecastWeather"
