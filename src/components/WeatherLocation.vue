@@ -75,42 +75,36 @@
       <div class="settings-unit-start">
         <span>Measure Units</span>
       </div>
-      <div class="unit-section border-bottom">
-        <div class="box row w100">
-          <div class="w50 box center">
-            <span class="unit-section_title">Temperature</span>
-          </div>
-          <div class="w50 justify-end">
-            <Switcher :onState="{ value: 'C°' }" :offState="{ value: 'F°' }" />
-          </div>
-        </div>
-      </div>
-      <div class="unit-section border-bottom">
-        <div class="box row w100">
-          <div class="w50 box center">
-            <span class="unit-section_title">Wind Speed</span>
-          </div>
-          <div class="w50 justify-end">
-            <Switcher
-              :onState="{ value: 'm/s' }"
-              :offState="{ value: 'mph' }"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="unit-section border-bottom">
-        <div class="box row w100">
-          <div class="w50 box center">
-            <span class="unit-section_title">Pressure</span>
-          </div>
-          <div class="w50 justify-end">
-            <Switcher
-              :onState="{ value: 'mmHg' }"
-              :offState="{ value: 'hPa' }"
-            />
+      <template v-for="unitKey in Object.keys(measureUnitsForm)" :key="unitKey">
+        <div class="unit-section border-bottom">
+          <div class="box row w100">
+            <div class="w50 box center">
+              <span class="unit-section_title">{{
+                measureUnitsForm[unitKey].title
+              }}</span>
+            </div>
+            <div class="w50 justify-end">
+              <Switch
+                :leftLabelSwitcher="measureUnitsForm[unitKey].leftLabelSwitcher"
+                :rightLabelSwitcher="
+                  measureUnitsForm[unitKey].rightLabelSwitcher
+                "
+                :activeSwitcher="
+                  measureUnitsForm[unitKey].selected ===
+                  measureUnitsForm[unitKey].leftLabelSwitcher
+                    ? 'L'
+                    : 'R'
+                "
+                @change="
+                  (v) => {
+                    onMeasureChanged(unitKey, v);
+                  }
+                "
+              />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </template>
   </Modal>
 </template>
@@ -119,7 +113,7 @@
 import { defineComponent, ref } from "vue";
 
 import Modal from "./Modal.vue";
-import Switcher from "./Switcher.vue";
+import Switch from "./Switch.vue";
 import location from "../assets/location.png";
 import settings from "../assets/settings.png";
 import grayClose from "../assets/gray_close.png";
@@ -135,7 +129,7 @@ export default defineComponent({
   },
   components: {
     Modal,
-    Switcher,
+    Switch,
   },
   setup() {
     let searchTerm = ref("");
@@ -151,6 +145,26 @@ export default defineComponent({
         settings,
         grayClose,
         redClose,
+      },
+      measureUnitsForm: {
+        temp: {
+          title: "Temperature",
+          leftLabelSwitcher: "C°",
+          rightLabelSwitcher: "F°",
+          selected: "C°",
+        },
+        wind: {
+          title: "Wind Speed",
+          leftLabelSwitcher: "m/s",
+          rightLabelSwitcher: "mph",
+          selected: "mph",
+        },
+        pressure: {
+          title: "Pressure",
+          leftLabelSwitcher: "mmHg",
+          rightLabelSwitcher: "hPa",
+          selected: "mmHg",
+        },
       },
       isSearchModalVisible: false,
       isSettingsModalVisible: false,
@@ -184,6 +198,9 @@ export default defineComponent({
       this.registerCurrentLocationFunc(location);
       this.updateForecastWeatherFunc(coord);
       this.closeSearchModal();
+    },
+    onMeasureChanged(unit, { active }) {
+      this.measureUnitsForm[unit].selected = active;
     },
     clearSearchRef() {
       this.locationDetailList = [];
