@@ -24,6 +24,11 @@ export default defineComponent({
       value: String,
     },
   },
+  data() {
+    return {
+      checked: true,
+    };
+  },
 });
 </script>
 
