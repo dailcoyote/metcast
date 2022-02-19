@@ -5,10 +5,9 @@
     font-style: normal;
 }
 
-main {
+body {
     background: #4974E2;
     width: 100%;
-    min-height: 872px;
     position: absolute;
     display: flex;
     justify-content: center;
