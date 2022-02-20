@@ -2,7 +2,7 @@
   <div class="box">
     <div id="location_block" class="row">
       <img :src="icons.location" width="20" height="20" class="pointer" />
-      <span>{{ defaultSettings.location }}</span>
+      <span>{{ title }}</span>
     </div>
     <div id="settings__block">
       <img
@@ -191,6 +191,9 @@ export default defineComponent({
     };
   },
   computed: {
+    title() {
+      return this.defaultSettings?.location.replace(',', ', ');
+    },
     tempLocation() {
       return (
         this.selectedDetailLocation?.location || this.defaultSettings.location
