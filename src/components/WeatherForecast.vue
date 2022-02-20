@@ -3,6 +3,8 @@
     <WeatherLocation
       :defaultSettings="defaultSettings"
       :applySuggestionsFunc="applySuggestions"
+      :registerSettingsChangesFunc="registerSettingsChanges"
+      :updateForecastWeatherFunc="updateForecastWeather"
     ></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
     <WeatherBack
@@ -67,7 +69,7 @@ export default defineComponent({
         pressure: 0.0,
         humidity: 0.0,
         tempUnit: this.defaultSettings.temp,
-        windSpeedUnit: this.defaultSettings.windSpeed,
+        windSpeedUnit: this.defaultSettings.wind,
         pressureUnit: this.defaultSettings.pressure,
       };
 
@@ -120,18 +122,22 @@ export default defineComponent({
     setCurrentLocation(location) {
       this.defaultSettings.location = location;
     },
-    fillDefaultSettings() {
-      this.defaultSettings.location = import.meta.env.VITE_DEFAULT_LOCATION;
-      this.defaultSettings.temp = this.currentMeasureUnit.temp;
-      this.defaultSettings.wind = this.currentMeasureUnit.windSpeed;
-      this.defaultSettings.pressure = this.currentMeasureUnit.pressure;
+    registerSettingsChanges(settings) {
+      this.defaultSettings = {
+        ...settings,
+      };
     },
   },
   created() {
     console.log("Building ABC index...", new Date());
     this.loading = !this.loading;
 
-    this.fillDefaultSettings();
+    this.registerSettingsChanges({
+      location: import.meta.env.VITE_DEFAULT_LOCATION,
+      temp: this.currentMeasureUnit.temp,
+      wind: this.currentMeasureUnit.windSpeed,
+      pressure: this.currentMeasureUnit.pressure,
+    });
     CityFinder.createABCIndex();
 
     let { coord } =

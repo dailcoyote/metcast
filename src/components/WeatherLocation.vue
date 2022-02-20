@@ -41,7 +41,7 @@
   <!--  Settings Modal -->
   <Modal v-show="isSettingsModalVisible" :zindex="555">
     <template v-slot:header>
-      <div class="settings-section box row w100 px-15p">
+      <div class="settings-location-section box row w100 px-15p">
         <div class="w50">
           <h4 class="settings-title">Settings</h4>
         </div>
@@ -54,17 +54,17 @@
     </template>
 
     <template v-slot:body>
-      <div class="settings-unit-start">
+      <div class="settings-unit-divider">
         <span>Location</span>
       </div>
-      <div class="unit-section">
+      <div class="settings-unit-section">
         <div class="box row w100">
           <div class="w50">
-            <span class="unit-section_title">Current Location</span>
+            <span class="settings-unit-section__title">Current Location</span>
           </div>
           <div class="w50 justify-end">
             <span
-              class="unit-section_location pointer"
+              class="settings-unit-section__location pointer"
               @click="showSearchModal"
             >
               {{ tempLocation }}
@@ -72,18 +72,18 @@
           </div>
         </div>
       </div>
-      <div class="settings-unit-start">
+      <div class="settings-unit-divider">
         <span>Measure Units</span>
       </div>
-      <form v-if="displayMeasuresForm">
+      <form id="measures-form" v-if="displayMeasuresForm">
         <template
-          v-for="unitKey in Object.keys(measureUnitsForm)"
-          :key="unitKey"
+          v-for="(unitKey, j) in Object.keys(measureUnitsForm)"
+          :key="j"
         >
-          <div class="unit-section border-bottom">
+          <div class="settings-unit-section border-bottom">
             <div class="box row w100">
               <div class="w50 box center">
-                <span class="unit-section_title">{{
+                <span class="settings-unit-section__title">{{
                   measureUnitsForm[unitKey].title
                 }}</span>
               </div>
@@ -111,6 +111,7 @@
             </div>
           </div>
         </template>
+        <button type="button" @click="applySettings">Apply Settings</button>
       </form>
     </template>
   </Modal>
@@ -139,6 +140,8 @@ export default defineComponent({
       pressure: String,
     },
     applySuggestionsFunc: Function,
+    registerSettingsChangesFunc: Function,
+    updateForecastWeatherFunc: Function,
   },
   components: {
     Modal,
@@ -202,14 +205,31 @@ export default defineComponent({
         this.locationDetailList = [...this.applySuggestionsFunc(newTerms)];
       }
     },
+    isSettingsModalVisible(toggle) {
+      if (toggle) {
+        this.displayMeasuresForm = true;
+      } else {
+        this.displayMeasuresForm = false;
+      }
+    },
   },
   methods: {
     showSettingsModal() {
-      this.displayMeasuresForm = true;
       this.isSettingsModalVisible = true;
     },
+    applySettings() {
+      const { location, coord } = this.selectedDetailLocation || {};
+      location &&
+        this.registerSettingsChangesFunc({
+          location: this.selectedDetailLocation?.location,
+          temp: this.measureUnitsForm.temp.selected,
+          wind: this.measureUnitsForm.wind.selected,
+          pressure: this.measureUnitsForm.pressure.selected,
+        });
+      coord && this.updateForecastWeatherFunc(coord);
+      this.isSettingsModalVisible = false;
+    },
     closeSettingsModal() {
-      this.displayMeasuresForm = false;
       this.selectedDetailLocation = undefined;
       this.measureUnitsForm.temp.selected =
         this.defaultSettings.temp || TemperatureUnits.Celsius;
@@ -222,8 +242,6 @@ export default defineComponent({
     onLocationSelected(detail) {
       this.selectedDetailLocation = detail;
       this.searchTerm = "";
-      // this.registerCurrentLocationFunc(location);
-      // this.updateForecastWeatherFunc(coord);
       this.closeSearchModal();
     },
     onMeasureChanged(unit, active) {
@@ -269,60 +287,6 @@ export default defineComponent({
   color: #ffffff;
 }
 
-.settings-section > div > h4 {
-  font-weight: 600;
-  font-size: 22px;
-  line-height: 26px;
-  /* identical to box height */
-
-  color: #000000;
-}
-
-.settings-section > div > button {
-  border: none;
-  display: block;
-  background: transparent;
-  padding: 0;
-  outline: none;
-  cursor: pointer;
-  transition: 0.1s;
-}
-
-.settings-unit-start {
-  background: #eceef2;
-  padding: 9px 25px;
-}
-
-.settings-unit-start > span {
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 16px;
-  color: #a8abb4;
-}
-
-.unit-section {
-  padding: 16px 25px;
-}
-
-.unit-section_title {
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
-  /* identical to box height */
-
-  color: #000000;
-}
-
-.unit-section_location {
-  font-weight: 800;
-  font-size: 14px;
-  line-height: 21px;
-  text-align: right;
-  text-transform: uppercase;
-
-  color: #2196f3;
-}
-
 .border-bottom {
   border-bottom: 1px solid #a8abb4;
 }
@@ -332,7 +296,7 @@ ul {
 }
 
 li {
-  padding: 10px 15px 10px 15px;
+  padding: 10px 25px 10px 25px;
 }
 
 ul > li:hover {
@@ -388,5 +352,82 @@ ul > li > span {
   outline: none;
   cursor: pointer;
   transition: 0.1s;
+}
+
+.settings-location-section > div > h4 {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 26px;
+  /* identical to box height */
+
+  color: #000000;
+}
+
+.settings-location-section > div > button {
+  border: none;
+  display: block;
+  background: transparent;
+  padding: 0;
+  outline: none;
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.settings-unit-section {
+  padding: 16px 25px;
+}
+
+.settings-unit-section__title {
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  /* identical to box height */
+
+  color: #000000;
+}
+
+.settings-unit-section__location {
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 21px;
+  text-align: right;
+  text-transform: uppercase;
+
+  color: #2196f3;
+}
+
+.settings-unit-divider {
+  background: #eceef2;
+  padding: 9px 25px;
+}
+
+.settings-unit-divider > span {
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 16px;
+  color: #a8abb4;
+}
+
+#measures-form > button {
+  width: 325px;
+  height: 50px;
+  position: absolute;
+  margin-top: 16px;
+  margin-left: 25px;
+  margin-right: 25px;
+  /* padding: 16px 25px; */
+
+  background: #0084d0;
+  border: none;
+  border-radius: 9px;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 21px;
+  /* identical to box height */
+
+  text-align: center;
+
+  color: #ffffff;
+  cursor: pointer;
 }
 </style>
