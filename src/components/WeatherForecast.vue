@@ -113,13 +113,62 @@ export default defineComponent({
       ];
     },
     hourlyWeatherStats() {
-      return this?.currentWeatherData?.hourly || [];
+      return (
+        this?.currentWeatherData?.hourly.map(this.genForecastHourlyMap) || []
+      );
     },
     dailyWeatherStats() {
-      return this?.currentWeatherData?.daily || [];
+      return (
+        this?.currentWeatherData?.daily.map(this.genForecastDailyMap) || []
+      );
     },
   },
   methods: {
+    genForecastHourlyMap(rec) {
+      let temp;
+      if (import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT === "Metric") {
+        temp =
+          this.defaultSettings.temp !== this.currentMeasureUnit.temp
+            ? WeatherComposition.MeasurementUnits.convertCelsius2Fahrenheit(
+                rec.temp
+              )
+            : rec.temp;
+      }
+      return {
+        ...rec,
+        temp,
+      };
+    },
+    genForecastDailyMap(rec) {
+      let max, min, temp;
+      if (import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT === "Metric") {
+        max =
+          this.defaultSettings.temp !== this.currentMeasureUnit.temp
+            ? parseFloat(
+                WeatherComposition.MeasurementUnits.convertCelsius2Fahrenheit(
+                  rec.temp.max
+                )
+              )
+            : rec.temp.max;
+        min =
+          this.defaultSettings.temp !== this.currentMeasureUnit.temp
+            ? parseFloat(
+                WeatherComposition.MeasurementUnits.convertCelsius2Fahrenheit(
+                  rec.temp.min
+                )
+              )
+            : rec.temp.min;
+        temp = {
+          ...rec.temp,
+          min,
+          max,
+        };
+      }
+      return {
+        ...rec,
+        temp
+      };
+    },
     async updateForecastWeather(coord) {
       try {
         this.currentWeatherData = await OpenWeatherMap.fetchForecastWeatherData(
