@@ -4,19 +4,39 @@ class CityFinder {
     constructor() {
         this._abcIndex = new Map();
     }
-    createABCIndex() {
+    createABCIndex(withSort = true) {
         for (let index = 0; index < Storage.length; index++) {
-            const cursor = Storage[index];
-            const key = cursor.name.charAt(0);
+            let cursor, branch, k;
+            cursor = Storage[index];
+            k = cursor.name.charAt(0);
 
-            if (!this._abcIndex.has(key)) {
-                this._abcIndex.set(key, [cursor]);
+            if (!this._abcIndex.has(k)) {
+                this._abcIndex.set(k, [cursor]);
                 continue;
             }
 
-            const branch = this._abcIndex.get(key);
+            branch = this._abcIndex.get(k);
             branch.push(cursor);
-            this._abcIndex.set(key, branch);
+            this._abcIndex.set(k, branch);
+        }
+
+        if (!withSort) {
+            return;
+        }
+
+        // Sorting
+        for (let cityIndex of this._abcIndex.keys()) {
+            const citiesByABCIndex = this._abcIndex.get(cityIndex);
+            citiesByABCIndex.sort(function (a, b) {
+                if (a.name > b.name) {
+                    return 1;
+                }
+                if (a.name < b.name) {
+                    return -1;
+                }
+                return 0;
+            });
+            this._abcIndex.set(cityIndex, citiesByABCIndex);
         }
     }
     fetchLocationDetail(location) {
@@ -29,12 +49,12 @@ class CityFinder {
             );
     }
     getSuggestions(searchTerm = "") {
-        const branch = this._abcIndex.get(searchTerm.charAt(0)) || [];
+        const citiesByABCIndex = this._abcIndex.get(searchTerm.charAt(0)) || [];
         let matches = 0;
         let suggestions = [];
 
-        for (let index = 0; index < branch.length; index++) {
-            const { id, coord, name, country } = branch[index];
+        for (let index = 0; index < citiesByABCIndex.length; index++) {
+            const { id, coord, name, country } = citiesByABCIndex[index];
             if (
                 name.substr(0, searchTerm.length) === searchTerm
                 && matches < 10

@@ -131,7 +131,6 @@ export default defineComponent({
     },
   },
   created() {
-    console.log("Building ABC index...", new Date());
     this.loading = !this.loading;
 
     this.registerSettingsChanges({
@@ -142,7 +141,9 @@ export default defineComponent({
       wind: this.currentMeasureUnit.windSpeed,
       pressure: this.currentMeasureUnit.pressure,
     });
+    console.log("Building ABC index...", new Date());
     CityFinder.createABCIndex();
+    console.log("Building Done");
 
     let { coord } =
       CityFinder.fetchLocationDetail(this.defaultSettings.location) || {};
