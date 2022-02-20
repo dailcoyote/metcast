@@ -1,5 +1,11 @@
 import Storage from "../data/city.list.json";
 
+/*
+    ABC indexes  are used as an optimal search for cities.
+    Custom sorting noticeably slows down the formation of ABCtree. 
+    I would not recommend using sorting in real tasks with large data sets
+*/
+
 class CityFinder {
     constructor() {
         this._abcIndex = new Map();
