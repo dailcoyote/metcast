@@ -4,7 +4,7 @@
       <ForecastBar
         v-for="(item, i) in hourlyForecast"
         :key="i"
-        :class="i > 0 && 'ml-5'"
+        :class="i >= 0 && 'ml-4'"
         :time="item.time"
         :temperature="item.temperature"
         :asset="item.asset"
