@@ -19,7 +19,7 @@ export default defineComponent({
   },
   props: {
     hourlyWeatherStats: Array,
-    dailyWeatherStats: Array,
+    dailyWeatherStats: Array
   },
   computed: {
     hourlyForecast() {

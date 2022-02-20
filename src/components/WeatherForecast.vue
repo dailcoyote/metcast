@@ -82,12 +82,26 @@ export default defineComponent({
           WeatherComposition.WeatherConditions[currentWeatherInfo?.main];
         const asset = g && g.findWeatherAsset(currentWeatherInfo?.id);
 
+        if (import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT === "Metric") {
+          currentStats.tempValue =
+            this.defaultSettings.temp !== this.currentMeasureUnit.temp
+              ? WeatherComposition.MeasurementUnits.convertCelsius2Fahrenheit(
+                  temp
+                )
+              : temp;
+          currentStats.pressure =
+            this.defaultSettings.pressure !== this.currentMeasureUnit.pressure
+              ? WeatherComposition.MeasurementUnits.convertPascal2mmHg(pressure)
+              : pressure;
+          currentStats.windSpeed =
+            this.defaultSettings.wind !== this.currentMeasureUnit.windSpeed
+              ? WeatherComposition.MeasurementUnits.convertMs2Mph(wind_speed)
+              : wind_speed;
+        }
+
         currentStats.dateTime = this.currentDateTime;
-        currentStats.tempValue = temp;
         currentStats.weatherDescription = currentWeatherInfo?.description || "";
         currentStats.weatherIcon = asset;
-        currentStats.windSpeed = wind_speed;
-        currentStats.pressure = pressure;
         currentStats.humidity = humidity;
       }
 

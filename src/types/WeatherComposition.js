@@ -121,7 +121,7 @@ class TemperatureUnits {
 }
 
 class WindSpeedUnits {
-    static MeterPerSec  = 'm/s';
+    static MeterPerSec = 'm/s';
     static MilesPerHour = 'mph';
 }
 
@@ -135,15 +135,21 @@ class MeasurementUnits {
         temp: TemperatureUnits.Celsius,
         windSpeed: WindSpeedUnits.MeterPerSec,
         pressure: PressureUnits.Pascal
-    } 
+    }
     static Imperial = {
         temp: TemperatureUnits.Fahrenheit,
         windSpeed: WindSpeedUnits.MilesPerHour,
         pressure: PressureUnits.Pascal
     }
-    // static convertMs2Mph() {
-
-    // }
+    static convertCelsius2Fahrenheit(grade) {
+        return ((grade * 1.8000) + 32).toFixed(2);
+    }
+    static convertMs2Mph(ms) {
+        return (ms * 2.2369362921).toFixed(2);
+    }
+    static convertPascal2mmHg(pascal){
+        return (pascal * 0.75006375541921).toFixed(2);
+    }
 }
 
 export default {
