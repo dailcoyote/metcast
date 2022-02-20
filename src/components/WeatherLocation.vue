@@ -219,13 +219,14 @@ export default defineComponent({
     },
     applySettings() {
       const { location, coord } = this.selectedDetailLocation || {};
-      location &&
-        this.registerSettingsChangesFunc({
-          location: this.selectedDetailLocation?.location,
-          temp: this.measureUnitsForm.temp.selected,
-          wind: this.measureUnitsForm.wind.selected,
-          pressure: this.measureUnitsForm.pressure.selected,
-        });
+      this.registerSettingsChangesFunc({
+        location: location
+          ? this.selectedDetailLocation.location
+          : this.defaultSettings.location,
+        temp: this.measureUnitsForm.temp.selected,
+        wind: this.measureUnitsForm.wind.selected,
+        pressure: this.measureUnitsForm.pressure.selected,
+      });
       coord && this.updateForecastWeatherFunc(coord);
       this.isSettingsModalVisible = false;
     },
