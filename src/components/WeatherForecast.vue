@@ -18,6 +18,7 @@
 import { defineComponent } from "vue";
 import OpenWeatherMap from "../api/OpenWeatherMap";
 import CityFinder from "../api/CityFinder";
+import EmbeddedStoreInterface from "../api/EmbeddedStoreInterface";
 import WeatherComposition from "../types/WeatherComposition";
 import WeatherLocation from "./WeatherLocation.vue";
 import WeatherStats from "./WeatherStats.vue";
@@ -126,6 +127,7 @@ export default defineComponent({
       this.defaultSettings = {
         ...settings,
       };
+      EmbeddedStoreInterface.saveGeoLocation(settings.location);
     },
   },
   created() {
@@ -133,7 +135,9 @@ export default defineComponent({
     this.loading = !this.loading;
 
     this.registerSettingsChanges({
-      location: import.meta.env.VITE_DEFAULT_LOCATION,
+      location:
+        EmbeddedStoreInterface.getGeoLocation() ||
+        import.meta.env.VITE_DEFAULT_LOCATION,
       temp: this.currentMeasureUnit.temp,
       wind: this.currentMeasureUnit.windSpeed,
       pressure: this.currentMeasureUnit.pressure,
