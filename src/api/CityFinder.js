@@ -6,18 +6,18 @@ class CityFinder {
     }
     createABCIndex(withSort = true) {
         for (let index = 0; index < Storage.length; index++) {
-            let cursor, branch, k;
+            let cursor, branch, foreignIndx;
             cursor = Storage[index];
-            k = cursor.name.charAt(0);
+            foreignIndx = cursor.name.charAt(0);
 
-            if (!this._abcIndex.has(k)) {
-                this._abcIndex.set(k, [cursor]);
+            if (!this._abcIndex.has(foreignIndx)) {
+                this._abcIndex.set(foreignIndx, [cursor]);
                 continue;
             }
 
-            branch = this._abcIndex.get(k);
+            branch = this._abcIndex.get(foreignIndx);
             branch.push(cursor);
-            this._abcIndex.set(k, branch);
+            this._abcIndex.set(foreignIndx, branch);
         }
 
         if (!withSort) {
@@ -41,11 +41,13 @@ class CityFinder {
     }
     fetchLocationDetail(location) {
         const [city, country] = location.split(','),
-            branch = this._abcIndex.get(location?.charAt(0)) || [];
-        return branch
+            foreignIndx = location?.charAt(0),
+            citiesByABCIndex = this._abcIndex.get(foreignIndx) || [];
+        return citiesByABCIndex
             .find(
                 (cursor) => cursor.name.toLowerCase().includes(city?.toLowerCase())
-                    && cursor.country.toLowerCase().includes(country?.toLowerCase())
+                    && cursor.country.toLowerCase().includes(country?.toLowerCase()
+                    )
             );
     }
     getSuggestions(searchTerm = "") {
