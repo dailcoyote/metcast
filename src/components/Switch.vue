@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "Switch",
@@ -24,25 +24,18 @@ export default defineComponent({
   },
   data() {
     return {
-      isChecked: this.activeSwitcher === "L" || false,
-      selected: this.activeSwitcher
+      isChecked: this.activeSwitcher === "L" || false
     };
   },
   watch: {
     isChecked(isOn) {
-      let state = {
-        active: undefined,
-      };
+      let toggle;
       if (isOn) {
-        state.active = this.leftLabelSwitcher;
+        toggle = this.leftLabelSwitcher;
       } else {
-        state.active = this.rightLabelSwitcher;
+        toggle = this.rightLabelSwitcher;
       }
-      this.$emit("change", state);
-    },
-    selected(newCode) {
-      console.log(newCode);
-      this.$emit('change', newCode === 'L' ? this.leftLabelSwitcher : this.rightLabelSwitcher)
+      this.$emit("change", toggle);
     }
   },
   methods: {
@@ -53,9 +46,8 @@ export default defineComponent({
       ) {
         return;
       }
-      this.selected = selectedSwitcher;
       this.isChecked = !this.isChecked;
-      event.preventDefault();
+      event?.preventDefault();
     },
   },
 });

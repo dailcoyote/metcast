@@ -75,36 +75,43 @@
       <div class="settings-unit-start">
         <span>Measure Units</span>
       </div>
-      <template v-for="unitKey in Object.keys(measureUnitsForm)" :key="unitKey">
-        <div class="unit-section border-bottom">
-          <div class="box row w100">
-            <div class="w50 box center">
-              <span class="unit-section_title">{{
-                measureUnitsForm[unitKey].title
-              }}</span>
-            </div>
-            <div class="w50 justify-end">
-              <Switch
-                :leftLabelSwitcher="measureUnitsForm[unitKey].leftLabelSwitcher"
-                :rightLabelSwitcher="
-                  measureUnitsForm[unitKey].rightLabelSwitcher
-                "
-                :activeSwitcher="
-                  measureUnitsForm[unitKey].selected ===
-                  measureUnitsForm[unitKey].leftLabelSwitcher
-                    ? 'L'
-                    : 'R'
-                "
-                @change="
-                  (v) => {
-                    onMeasureChanged(unitKey, v);
-                  }
-                "
-              />
+      <form v-if="displayMeasuresForm">
+        <template
+          v-for="unitKey in Object.keys(measureUnitsForm)"
+          :key="unitKey"
+        >
+          <div class="unit-section border-bottom">
+            <div class="box row w100">
+              <div class="w50 box center">
+                <span class="unit-section_title">{{
+                  measureUnitsForm[unitKey].title
+                }}</span>
+              </div>
+              <div class="w50 justify-end">
+                <Switch
+                  :leftLabelSwitcher="
+                    measureUnitsForm[unitKey].leftLabelSwitcher
+                  "
+                  :rightLabelSwitcher="
+                    measureUnitsForm[unitKey].rightLabelSwitcher
+                  "
+                  :activeSwitcher="
+                    measureUnitsForm[unitKey].selected ===
+                    measureUnitsForm[unitKey].leftLabelSwitcher
+                      ? 'L'
+                      : 'R'
+                  "
+                  @change="
+                    (v) => {
+                      onMeasureChanged(unitKey, v);
+                    }
+                  "
+                />
+              </div>
             </div>
           </div>
-        </div>
-      </template>
+        </template>
+      </form>
     </template>
   </Modal>
 </template>
@@ -119,6 +126,8 @@ import location from "../assets/location.png";
 import settings from "../assets/settings.png";
 import grayClose from "../assets/gray_close.png";
 import redClose from "../assets/close.png";
+
+const { TemperatureUnits, WindSpeedUnits, PressureUnits } = WeatherComposition;
 
 export default defineComponent({
   name: "WeatherLocation",
@@ -143,8 +152,6 @@ export default defineComponent({
     };
   },
   data() {
-    const { TemperatureUnits, WindSpeedUnits, PressureUnits } =
-      WeatherComposition;
     return {
       icons: {
         location,
@@ -176,6 +183,7 @@ export default defineComponent({
       },
       isSearchModalVisible: false,
       isSettingsModalVisible: false,
+      displayMeasuresForm: false,
       locationDetailList: new Array(),
     };
   },
@@ -197,16 +205,19 @@ export default defineComponent({
   },
   methods: {
     showSettingsModal() {
+      this.displayMeasuresForm = true;
       this.isSettingsModalVisible = true;
     },
     closeSettingsModal() {
+      this.displayMeasuresForm = false;
+      this.selectedDetailLocation = undefined;
+      this.measureUnitsForm.temp.selected =
+        this.defaultSettings.temp || TemperatureUnits.Celsius;
+      this.measureUnitsForm.wind.selected =
+        this.defaultSettings.windSpeed || WindSpeedUnits.MeterPerSec;
+      this.measureUnitsForm.pressure.selected =
+        this.defaultSettings.pressure || PressureUnits.Pascal;
       this.isSettingsModalVisible = false;
-    },
-    showSearchModal() {
-      this.isSearchModalVisible = true;
-    },
-    closeSearchModal() {
-      this.isSearchModalVisible = false;
     },
     onLocationSelected(detail) {
       this.selectedDetailLocation = detail;
@@ -215,8 +226,15 @@ export default defineComponent({
       // this.updateForecastWeatherFunc(coord);
       this.closeSearchModal();
     },
-    onMeasureChanged(unit, { active }) {
+    onMeasureChanged(unit, active) {
+      console.log("measure changed", active);
       this.measureUnitsForm[unit].selected = active;
+    },
+    showSearchModal() {
+      this.isSearchModalVisible = true;
+    },
+    closeSearchModal() {
+      this.isSearchModalVisible = false;
     },
     clearSearchRef() {
       this.locationDetailList = [];
