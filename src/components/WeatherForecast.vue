@@ -4,7 +4,6 @@
       :defaultSettings="defaultSettings"
       :applySuggestionsFunc="applySuggestions"
       :registerSettingsChangesFunc="registerSettingsChanges"
-      :updateForecastWeatherFunc="updateForecastWeather"
     ></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
     <WeatherBack
@@ -36,6 +35,7 @@ export default defineComponent({
       loading: false,
       defaultSettings: {
         location: undefined,
+        coord: undefined,
         temp: undefined,
         wind: undefined,
         pressure: undefined,
@@ -166,7 +166,7 @@ export default defineComponent({
       }
       return {
         ...rec,
-        temp
+        temp,
       };
     },
     async updateForecastWeather(coord) {
@@ -183,37 +183,53 @@ export default defineComponent({
         if (this.loading) this.loading = !this.loading;
       }
     },
-    setCurrentLocation(location) {
-      this.defaultSettings.location = location;
-    },
     registerSettingsChanges(settings) {
-      this.defaultSettings = {
-        ...settings,
-      };
-      EmbeddedStoreInterface.saveGeoLocation(settings.location);
+      if (!settings.coord) {
+        let { coord, name, country } =
+          CityFinder.fetchLocationDetail(settings.location) || {};
+        this.defaultSettings = {
+          ...settings,
+          location: name + "," + country,
+          coord,
+        };
+        // return 0x0a;
+      } else {
+        this.defaultSettings = { ...settings };
+      }
+
+      const { location, coord } = this.defaultSettings;
+
+      if (
+        coord?.lat !== EmbeddedStoreInterface.getGeoLocation()?.coord?.lat &&
+        coord?.lon !==
+          EmbeddedStoreInterface.getGeoLocation()?.coord?.lon
+      ) {
+        EmbeddedStoreInterface.saveGeoLocation({
+          coord,
+          location,
+        });
+      }
+      this.updateForecastWeather(coord);
+
+      return 0xba;
     },
   },
   created() {
     this.loading = !this.loading;
 
-    this.registerSettingsChanges({
-      location:
-        EmbeddedStoreInterface.getGeoLocation() ||
-        import.meta.env.VITE_DEFAULT_LOCATION,
-      temp: this.currentMeasureUnit.temp,
-      wind: this.currentMeasureUnit.windSpeed,
-      pressure: this.currentMeasureUnit.pressure,
-    });
     console.log("Building ABC index...", new Date());
     CityFinder.createABCIndex();
     console.log("Building Done");
 
-    let { coord } =
-      CityFinder.fetchLocationDetail(this.defaultSettings.location) || {};
-
-    if (coord) {
-      this.updateForecastWeather(coord);
-    }
+    this.registerSettingsChanges({
+      location:
+        EmbeddedStoreInterface.getGeoLocation()?.location ||
+        import.meta.env.VITE_DEFAULT_LOCATION,
+      coord: EmbeddedStoreInterface.getGeoLocation()?.coord,
+      temp: this.currentMeasureUnit.temp,
+      wind: this.currentMeasureUnit.windSpeed,
+      pressure: this.currentMeasureUnit.pressure,
+    });
   },
 });
 </script>

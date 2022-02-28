@@ -26,35 +26,36 @@ class CityFinder {
             this._abcIndex.set(foreignIndx, branch);
         }
 
-        if (!withSort) {
-            return;
-        }
-
-        // Sorting
-        for (let cityIndex of this._abcIndex.keys()) {
-            const citiesByABCIndex = this._abcIndex.get(cityIndex);
-            citiesByABCIndex.sort(function (a, b) {
-                if (a.name > b.name) {
-                    return 1;
-                }
-                if (a.name < b.name) {
-                    return -1;
-                }
-                return 0;
-            });
-            this._abcIndex.set(cityIndex, citiesByABCIndex);
+        if (withSort) {
+            for (let cityIndex of this._abcIndex.keys()) {
+                const citiesByABCIndex = this._abcIndex.get(cityIndex);
+                citiesByABCIndex.sort(function (a, b) {
+                    if (a.name > b.name) {
+                        return 1;
+                    }
+                    if (a.name < b.name) {
+                        return -1;
+                    }
+                    return 0;
+                });
+                this._abcIndex.set(cityIndex, citiesByABCIndex);
+            }
         }
     }
     fetchLocationDetail(location) {
         const [city, country] = location.split(','),
             foreignIndx = location?.charAt(0),
             citiesByABCIndex = this._abcIndex.get(foreignIndx) || [];
-        return citiesByABCIndex
-            .find(
-                (cursor) => cursor.name.toLowerCase().includes(city?.toLowerCase())
-                    && cursor.country.toLowerCase().includes(country?.toLowerCase()
-                    )
-            );
+
+        for (let index = 0; index < citiesByABCIndex.length; index++) {
+            let cursor = citiesByABCIndex[index];
+            
+            if (cursor.name.toLowerCase().includes(city?.toLowerCase()) &&
+                cursor.country.toLowerCase().includes(country?.toLowerCase())) {
+                return cursor;
+            }
+        }
+        return undefined;
     }
     getSuggestions(searchTerm = "") {
         const citiesByABCIndex = this._abcIndex.get(searchTerm.charAt(0)) || [];

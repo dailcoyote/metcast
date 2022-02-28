@@ -1,8 +1,11 @@
 export default {
-    saveGeoLocation(location) {
-        localStorage.setItem(0xF0, location);
+    saveGeoLocation(geoData) {
+        localStorage.setItem(0xF0, JSON.stringify({
+            location: geoData.location,
+            coord: geoData.coord
+        }));
     },
     getGeoLocation() {
-        return localStorage.getItem(0xF0);
+        return JSON.parse(localStorage.getItem(0xF0));
     }
 }

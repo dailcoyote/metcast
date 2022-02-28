@@ -165,7 +165,6 @@ export default defineComponent({
     },
     applySuggestionsFunc: Function,
     registerSettingsChangesFunc: Function,
-    updateForecastWeatherFunc: Function,
   },
   components: {
     Modal,
@@ -186,7 +185,6 @@ export default defineComponent({
         grayClose,
         redClose,
       },
-      selectedDetailLocation: undefined,
       measureUnitsForm: {
         temp: {
           title: "Temperature",
@@ -212,6 +210,7 @@ export default defineComponent({
       isSearchModalVisible: false,
       isSettingsModalVisible: false,
       displayMeasuresForm: false,
+      selectedDetailLocation: undefined,
       locationDetailList: new Array(),
     };
   },
@@ -254,14 +253,12 @@ export default defineComponent({
     applySettings() {
       const { location, coord } = this.selectedDetailLocation || {};
       this.registerSettingsChangesFunc({
-        location: location
-          ? this.selectedDetailLocation.location
-          : this.defaultSettings.location,
+        location: location || this.defaultSettings.location,
+        coord,
         temp: this.measureUnitsForm.temp.selected,
         wind: this.measureUnitsForm.wind.selected,
         pressure: this.measureUnitsForm.pressure.selected,
       });
-      coord && this.updateForecastWeatherFunc(coord);
       this.isSettingsModalVisible = false;
     },
     closeSettingsModal() {
