@@ -1,10 +1,10 @@
 <template>
   <div class="box">
-    <div id="location_block" class="row">
+    <div id="location-text__head" class="row">
       <img :src="icons.location" width="20" height="20" class="pointer" />
       <span>{{ title }}</span>
     </div>
-    <div id="settings__block">
+    <div id="settings-activator">
       <img
         :src="icons.settings"
         width="24"
@@ -295,21 +295,21 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#location_block {
+#location-text__head {
   width: 328px;
   display: flex;
   justify-content: center;
 }
 
-#settings__block {
+#settings-activator {
   width: 24px;
 }
 
-#location_block > img {
+#location-text__head > img {
   margin-right: 2px;
 }
 
-#location_block > span {
+#location-text__head > span {
   font-weight: bold;
   font-size: 18px;
   line-height: 21px;

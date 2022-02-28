@@ -192,17 +192,19 @@ export default defineComponent({
           location: name + "," + country,
           coord,
         };
-        // return 0x0a;
       } else {
         this.defaultSettings = { ...settings };
       }
 
       const { location, coord } = this.defaultSettings;
 
+      if (!coord) {
+        return 0x10;
+      }
+
       if (
         coord?.lat !== EmbeddedStoreInterface.getGeoLocation()?.coord?.lat &&
-        coord?.lon !==
-          EmbeddedStoreInterface.getGeoLocation()?.coord?.lon
+        coord?.lon !== EmbeddedStoreInterface.getGeoLocation()?.coord?.lon
       ) {
         EmbeddedStoreInterface.saveGeoLocation({
           coord,
