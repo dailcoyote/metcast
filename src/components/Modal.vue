@@ -1,7 +1,7 @@
 <template>
-  <div class="modal-backdrop" :style="axisPosition">
+  <div :class="['modal-backdrop', !minify && 'center']" :style="axisPosition">
     <div
-      class="modal"
+      :class="['modal', minify && 'minify']"
       role="dialog"
       aria-labelledby="modalTitle"
       aria-describedby="modalDescription"
@@ -27,7 +27,11 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "Modal",
   props: {
-    zindex: Number
+    zindex: Number,
+    minify: {
+      type: Boolean,
+      default: false
+    }
   }, 
   computed: {
     axisPosition() {
@@ -47,7 +51,6 @@ export default defineComponent({
   background-color: rgba(0, 0, 0, 0.3);
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 .modal {
@@ -60,29 +63,23 @@ export default defineComponent({
   height: 100vh;
 }
 
+.minify {
+  width: 360px;
+  height: 252px;
+  border-radius: 12px !important;
+  margin-top: 74px;
+}
+
 .modal-header {
   position: relative;
   padding: 21px 10px;
   display: flex;
   border-bottom: 1px solid #eeeeee;
   color: #4aae9b;
-  justify-content: space-between;
+  justify-content: space-around;
 }
 
 .modal-body {
   position: relative;
-}
-
-.btn-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: none;
-  font-size: 20px;
-  padding: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #4aae9b;
-  background: transparent;
 }
 </style>

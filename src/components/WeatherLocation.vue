@@ -14,6 +14,30 @@
       />
     </div>
   </div>
+  <!-- Change Location Modal -->
+  <Modal v-show="isChangeLocationModalVisible" :zindex="666" :minify="true">
+    <template v-slot:header>
+      <span>Change Location?</span>
+    </template>
+
+    <template v-slot:body>
+      <div id="switch-location-form">
+        <button type="button" class="action-btn" @click="() => {}">
+          Use My Current Location
+        </button>
+        <button type="button" class="action-btn mt-2" @click="showSearchModal">
+          Select location manually
+        </button>
+        <button
+          type="button"
+          class="rollback-btn mt-2"
+          @click="closeChangeLocationModal"
+        >
+          Cancel
+        </button>
+      </div>
+    </template>
+  </Modal>
   <!-- Search Modal -->
   <Modal v-show="isSearchModalVisible" @close="closeSearchModal" :zindex="777">
     <template v-slot:header>
@@ -65,7 +89,7 @@
           <div class="w50 justify-end">
             <span
               class="settings-unit-section__location pointer"
-              @click="showSearchModal"
+              @click="showChangeLocationModal"
             >
               {{ tempLocation }}
             </span>
@@ -184,6 +208,7 @@ export default defineComponent({
           selected: this.defaultSettings.pressure || PressureUnits.Pascal,
         },
       },
+      isChangeLocationModalVisible: false,
       isSearchModalVisible: false,
       isSettingsModalVisible: false,
       displayMeasuresForm: false,
@@ -192,7 +217,7 @@ export default defineComponent({
   },
   computed: {
     title() {
-      return this.defaultSettings?.location.replace(',', ', ');
+      return this.defaultSettings?.location.replace(",", ", ");
     },
     tempLocation() {
       return (
@@ -217,6 +242,12 @@ export default defineComponent({
     },
   },
   methods: {
+    showChangeLocationModal() {
+      this.isChangeLocationModalVisible = true;
+    },
+    closeChangeLocationModal() {
+      this.isChangeLocationModalVisible = false;
+    },
     showSettingsModal() {
       this.isSettingsModalVisible = true;
     },
@@ -253,6 +284,7 @@ export default defineComponent({
       this.measureUnitsForm[unit].selected = active;
     },
     showSearchModal() {
+      this.closeChangeLocationModal();
       this.isSearchModalVisible = true;
     },
     closeSearchModal() {
@@ -433,5 +465,37 @@ ul > li > span {
 
   color: #ffffff;
   cursor: pointer;
+}
+
+#switch-location-form {
+  padding: 15px;
+}
+
+#switch-location-form > button {
+  width: 330px;
+  position: relative;
+  background: transparent;
+
+  font-size: 18px;
+  line-height: 21px;
+
+  text-align: center;
+  cursor: pointer;
+}
+
+#switch-location-form > .action-btn {
+  height: 50px;
+  border: 1px solid #2196f3;
+  box-sizing: border-box;
+  border-radius: 9px;
+  font-weight: 600;
+  color: #2196f3;
+}
+
+#switch-location-form > .rollback-btn {
+  border: none;
+  font-weight: normal;
+  color: #ff0c0c;
+  margin-top: 22px;
 }
 </style>
