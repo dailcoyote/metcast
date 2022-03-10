@@ -4,6 +4,7 @@
       :defaultSettings="defaultSettings"
       :applySuggestionsFunc="applySuggestions"
       :registerSettingsChangesFunc="registerSettingsChanges"
+      :getCurrentGeoPositionFunc="getCurrentGeoPosition"
     ></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
     <WeatherBack
@@ -182,6 +183,21 @@ export default defineComponent({
       } finally {
         if (this.loading) this.loading = !this.loading;
       }
+    },
+    getCurrentGeoPosition() {
+      return new Promise((resolve) => {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition((position) => {
+            console.log("Finding Nearby Places");
+            let ret = CityFinder.findPlacesNearby(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+            console.log("Geolocation determined");
+            resolve(ret);
+          });
+        }
+      });
     },
     registerSettingsChanges(settings) {
       if (!settings.coord) {

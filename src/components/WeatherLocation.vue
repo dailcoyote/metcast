@@ -22,7 +22,11 @@
 
     <template v-slot:body>
       <div id="switch-location-form">
-        <button type="button" class="action-btn" @click="() => {}">
+        <button
+          type="button"
+          class="action-btn"
+          @click="onDetermineAutoGeoPosition"
+        >
           Use My Current Location
         </button>
         <button type="button" class="action-btn mt-2" @click="showSearchModal">
@@ -165,6 +169,7 @@ export default defineComponent({
     },
     applySuggestionsFunc: Function,
     registerSettingsChangesFunc: Function,
+    getCurrentGeoPositionFunc: Function,
   },
   components: {
     Modal,
@@ -270,6 +275,10 @@ export default defineComponent({
       this.measureUnitsForm.pressure.selected =
         this.defaultSettings.pressure || PressureUnits.Pascal;
       this.isSettingsModalVisible = false;
+    },
+    async onDetermineAutoGeoPosition() {
+      this.selectedDetailLocation = await this.getCurrentGeoPositionFunc();
+      this.closeChangeLocationModal();
     },
     onLocationSelected(detail) {
       this.selectedDetailLocation = detail;
