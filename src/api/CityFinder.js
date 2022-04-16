@@ -55,9 +55,9 @@ class GeoCalculator {
     }
 }
 
-class CityFinder {
+class ABCIndexTree {
     constructor() {
-        this._abcIndex = new Map();
+        this._treeMap = new Map();
     }
     createABCIndex(withSort = true) {
         for (let index = 0; index < Storage.length; index++) {
@@ -65,19 +65,19 @@ class CityFinder {
             cursor = Storage[index];
             foreignIndx = cursor.name.charAt(0);
 
-            if (!this._abcIndex.has(foreignIndx)) {
-                this._abcIndex.set(foreignIndx, [cursor]);
+            if (!this._treeMap.has(foreignIndx)) {
+                this._treeMap.set(foreignIndx, [cursor]);
                 continue;
             }
 
-            branch = this._abcIndex.get(foreignIndx);
+            branch = this._treeMap.get(foreignIndx);
             branch.push(cursor);
-            this._abcIndex.set(foreignIndx, branch);
+            this._treeMap.set(foreignIndx, branch);
         }
 
         if (withSort) {
-            for (let cityIndex of this._abcIndex.keys()) {
-                const citiesByABCIndex = this._abcIndex.get(cityIndex);
+            for (let cityIndex of this._treeMap.keys()) {
+                const citiesByABCIndex = this._treeMap.get(cityIndex);
                 citiesByABCIndex.sort(function (a, b) {
                     if (a.name > b.name) {
                         return 1;
@@ -87,38 +87,14 @@ class CityFinder {
                     }
                     return 0;
                 });
-                this._abcIndex.set(cityIndex, citiesByABCIndex);
+                this._treeMap.set(cityIndex, citiesByABCIndex);
             }
         }
     }
-    findPlacesNearby(iLat, iLon) {
-        const iMaxRadius = 0.5;
-        let nearestPoint = undefined;
-
-        for (let index = 0; index < Storage.length; index++) {
-            let cursor = Storage[index];
-            let currentLat = cursor?.coord?.lat,
-                currentLon = cursor?.coord?.lon;
-            let iCurrentDistance = GeoCalculator.calculateEuclideanDistance(iLat, iLon, currentLat, currentLon);
-
-            if (iCurrentDistance <= iMaxRadius) {
-                if (!nearestPoint || iCurrentDistance < nearestPoint?.distance) {
-                    nearestPoint = {
-                        ...cursor,
-                    distance: iCurrentDistance,
-                    location: cursor.name + "," + cursor.country
-                    }
-                }
-            }
-        }
-
-        return nearestPoint;
-
-    }
-    fetchLocationDetail(location) {
+    getCursor(location) {
         const [city, country] = location.split(','),
             foreignIndx = location?.charAt(0),
-            citiesByABCIndex = this._abcIndex.get(foreignIndx) || [];
+            citiesByABCIndex = this._treeMap.get(foreignIndx) || [];
 
         for (let index = 0; index < citiesByABCIndex.length; index++) {
             let cursor = citiesByABCIndex[index];
@@ -131,7 +107,7 @@ class CityFinder {
         return undefined;
     }
     getSuggestions(searchTerm = "") {
-        const citiesByABCIndex = this._abcIndex.get(searchTerm.charAt(0)) || [];
+        const citiesByABCIndex = this._treeMap.get(searchTerm.charAt(0)) || [];
         let matches = 0;
         let suggestions = [];
 
@@ -158,6 +134,44 @@ class CityFinder {
         }
 
         return suggestions;
+    }
+}
+
+class CityFinder {
+    constructor() {
+        this._abcIndexTree = new ABCIndexTree();
+    }
+    get abcIndexTree() {
+        return this._abcIndexTree;
+    }
+    findPlacesNearby(iLat, iLon) {
+        const iMaxRadius = 0.5;
+        let nearestPoint = undefined;
+
+        for (let index = 0; index < Storage.length; index++) {
+            let cursor = Storage[index];
+            let currentLat = cursor?.coord?.lat,
+                currentLon = cursor?.coord?.lon;
+            let iCurrentDistance = GeoCalculator.calculateEuclideanDistance(
+                iLat,
+                iLon,
+                currentLat,
+                currentLon
+            );
+
+            if (iCurrentDistance <= iMaxRadius) {
+                if (!nearestPoint || iCurrentDistance < nearestPoint?.distance) {
+                    nearestPoint = {
+                        ...cursor,
+                        distance: iCurrentDistance,
+                        location: cursor.name + "," + cursor.country
+                    }
+                }
+            }
+        }
+
+        return nearestPoint;
+
     }
 }
 

@@ -42,7 +42,7 @@ export default defineComponent({
         pressure: undefined,
       },
       currentWeatherData: undefined,
-      applySuggestions: CityFinder.getSuggestions.bind(CityFinder),
+      applySuggestions: CityFinder.abcIndexTree.getSuggestions.bind(CityFinder.abcIndexTree)
     };
   },
   computed: {
@@ -202,7 +202,7 @@ export default defineComponent({
     registerSettingsChanges(settings) {
       if (!settings.coord) {
         let { coord, name, country } =
-          CityFinder.fetchLocationDetail(settings.location) || {};
+          CityFinder.abcIndexTree.getCursor(settings.location) || {};
         this.defaultSettings = {
           ...settings,
           location: name + "," + country,
@@ -236,7 +236,7 @@ export default defineComponent({
     this.loading = !this.loading;
 
     console.log("Building ABC index...", new Date());
-    CityFinder.createABCIndex();
+    CityFinder.abcIndexTree.createABCIndex();
     console.log("Building Done");
 
     this.registerSettingsChanges({
