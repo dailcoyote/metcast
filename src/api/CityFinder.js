@@ -93,32 +93,25 @@ class CityFinder {
     }
     findPlacesNearby(iLat, iLon) {
         const iMaxRadius = 0.5;
-        const placesNearby = new Set();
+        let nearestPoint = undefined;
 
         for (let index = 0; index < Storage.length; index++) {
             let cursor = Storage[index];
             let currentLat = cursor?.coord?.lat,
                 currentLon = cursor?.coord?.lon;
-            let iDistance = GeoCalculator.calculateEuclideanDistance(iLat, iLon, currentLat, currentLon);
+            let iCurrentDistance = GeoCalculator.calculateEuclideanDistance(iLat, iLon, currentLat, currentLon);
 
-            if (iDistance <= iMaxRadius) {
-                placesNearby.add({
-                    ...cursor,
-                    distance: iDistance,
+            if (iCurrentDistance <= iMaxRadius) {
+                if (!nearestPoint || iCurrentDistance < nearestPoint?.distance) {
+                    nearestPoint = {
+                        ...cursor,
+                    distance: iCurrentDistance,
                     location: cursor.name + "," + cursor.country
-                });
+                    }
+                }
             }
         }
-        let nearestPoint = undefined;
 
-        for (const location of placesNearby.values()) {
-            console.log(location)
-            if (!nearestPoint || location?.distance < nearestPoint?.distance) {
-                nearestPoint = location;
-            }
-        }
-        
-        placesNearby.clear();
         return nearestPoint;
 
     }
