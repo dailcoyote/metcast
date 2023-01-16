@@ -168,7 +168,7 @@ export default defineComponent({
       pressure: String,
     },
     applySuggestionsFunc: Function,
-    registerSettingsChangesFunc: Function,
+    asyncForecastUpdateFuncFunc: Function,
     getCurrentGeoPositionFunc: Function,
   },
   components: {
@@ -257,7 +257,7 @@ export default defineComponent({
     },
     applySettings() {
       const { location, coord } = this.selectedDetailLocation || {};
-      this.registerSettingsChangesFunc({
+      this.asyncForecastUpdateFuncFunc({
         location: location || this.defaultSettings.location,
         coord,
         temp: this.measureUnitsForm.temp.selected,

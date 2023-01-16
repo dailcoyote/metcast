@@ -3,7 +3,7 @@
     <WeatherLocation
       :defaultSettings="defaultSettings"
       :applySuggestionsFunc="applySuggestions"
-      :registerSettingsChangesFunc="registerSettingsChanges"
+      :asyncForecastUpdateFuncFunc="updateForecast"
       :getCurrentGeoPositionFunc="getCurrentGeoPosition"
     ></WeatherLocation>
     <WeatherStats :stats="currentWeatherStats"></WeatherStats>
@@ -172,20 +172,6 @@ export default defineComponent({
         temp,
       };
     },
-    async updateForecastWeather(coord) {
-      try {
-        this.currentWeatherData = await OpenWeatherMap.fetchForecastWeatherData(
-          coord.lat,
-          coord.lon,
-          import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT
-        );
-        console.log("Forecast updated");
-      } catch (error) {
-        alert(error.message);
-      } finally {
-        if (this.loading) this.loading = !this.loading;
-      }
-    },
     getCurrentGeoPosition() {
       return new Promise((resolve) => {
         if (navigator.geolocation) {
@@ -201,7 +187,7 @@ export default defineComponent({
         }
       });
     },
-    registerSettingsChanges(settings) {
+    async updateForecast(settings) {
       if (!settings.coord) {
         let { coord, name, country } =
           CityFinder.findDetailedLocation(settings.location) || {};
@@ -220,6 +206,8 @@ export default defineComponent({
         return 0x10;
       }
 
+      this.loading = !this.loading;
+
       if (
         coord?.lat !== EmbeddedStoreInterface.getGeoLocation()?.coord?.lat &&
         coord?.lon !== EmbeddedStoreInterface.getGeoLocation()?.coord?.lon
@@ -229,15 +217,25 @@ export default defineComponent({
           location,
         });
       }
-      this.updateForecastWeather(coord);
+
+      try {
+        this.currentWeatherData = await OpenWeatherMap.fetchForecastWeatherData(
+          coord.lat,
+          coord.lon,
+          import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT
+        );
+        console.log("Forecast updated");
+      } catch (error) {
+        alert(error.message);
+      }
+
+      this.loading = !this.loading;
 
       return 0xba;
     },
   },
   created() {
-    this.loading = !this.loading;
-
-    this.registerSettingsChanges({
+    this.updateForecast({
       location:
         EmbeddedStoreInterface.getGeoLocation()?.location ||
         import.meta.env.VITE_DEFAULT_LOCATION,
