@@ -1,5 +1,5 @@
 <template>
-  <section id="weather__section" v-if="!loading">
+  <section id="weather__section" v-show="!loading">
     <WeatherLocation
       :defaultSettings="defaultSettings"
       :applySuggestionsFunc="applySuggestions"
@@ -11,7 +11,9 @@
       :hourlyWeatherStats="hourlyWeatherStats"
       :dailyWeatherStats="dailyWeatherStats"
     ></WeatherBack>
+    <!-- spinnerGif -->
   </section>
+  <img v-if="loading" class="center" :src="spinnerGif" />
 </template>
 
 <script>
@@ -23,6 +25,7 @@ import WeatherComposition from "../types/WeatherComposition";
 import WeatherLocation from "./WeatherLocation.vue";
 import WeatherStats from "./WeatherStats.vue";
 import WeatherBack from "./WeatherBack.vue";
+import SpinnerAsset from "../assets/spinner.gif";
 
 export default defineComponent({
   name: "WeatherForecast",
@@ -34,6 +37,7 @@ export default defineComponent({
   data() {
     return {
       loading: false,
+      spinnerGif: SpinnerAsset,
       defaultSettings: {
         location: undefined,
         coord: undefined,
