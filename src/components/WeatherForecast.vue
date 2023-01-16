@@ -42,7 +42,7 @@ export default defineComponent({
         pressure: undefined,
       },
       currentWeatherData: undefined,
-      applySuggestions: CityFinder.search.bind(CityFinder)
+      applySuggestions: CityFinder.search.bind(CityFinder),
     };
   },
   computed: {
@@ -81,7 +81,9 @@ export default defineComponent({
         const currentWeatherInfo = weather[0];
         const g =
           WeatherComposition.WeatherConditions[currentWeatherInfo?.main];
-        const asset = g && g.findWeatherAsset(currentWeatherInfo?.id);
+        const asset = g
+          ? g.findWeatherAsset(currentWeatherInfo?.id)
+          : "/src/assets/smoke-pok-mon.png";
 
         if (import.meta.env.VITE_DEFAULT_MEASUREMENT_UNIT === "Metric") {
           currentStats.tempValue =
