@@ -19,7 +19,7 @@ export default defineComponent({
   },
   props: {
     hourlyWeatherStats: Array,
-    dailyWeatherStats: Array
+    dailyWeatherStats: Array,
   },
   computed: {
     hourlyForecast() {
@@ -81,15 +81,15 @@ export default defineComponent({
   },
   methods: {
     convert2TemperatureFormat(tempValue) {
-      let v = tempValue > 0 ? "+" : '';
+      let v = tempValue > 0 ? "+" : "";
       v += Math.round(tempValue) + "°";
       return v;
     },
     defineAsset(type, id) {
       let g = WeatherComposition.WeatherConditions[type];
-      return g && g.findWeatherAsset(id);
+      return g ? g.findWeatherAsset(id) : "/src/assets/smoke-pok-mon.png";
     },
-  }
+  },
 });
 </script>
 
